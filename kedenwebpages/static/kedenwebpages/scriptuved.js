@@ -7,12 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const input = document.getElementById('screen');
-        const file = input.files[0];
-        if (!file) alert('Файл неправильно формата или слишком большой');
-        const base64 = await fileToBase64(file);
-        const filename = generateFilename('screen', 'png');
-
         const contact_id = await getContact();
         const user_id = tg.initDataUnsafe.user?.id;
         const user_name = tg.initDataUnsafe.user?.username;
@@ -31,12 +25,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 ufCrm168FioFromTg: user_name,
                 ufCrm168UserChatId: user_id,
                 contactId: contact_id,
-                ufCrm168SelectModule: module_id,
-                ufCrm168Files: {
-                    fileData: [filename, base64]
-                }
+                ufCrm168SelectModule: module_id
             }
         };
+
+        const input = document.getElementById('screen');
+        const file = input.files[0];
+
+        const video = document.getElementById('video');
+        const videofile = video.files[0];
+
+        data.fields.ufCrm168Files = [];
+
+        if(file){
+            const base64 = await fileToBase64(file);
+            const filename = generateFilename('screen', 'png');
+            data.fields.ufCrm168Files.push([filename, base64]);
+        }
+
+        if(video){
+            const base64 = await fileToBase64(videofile);
+            const filename = generateFilename('video', 'mp4');
+            data.fields.ufCrm168Files.push([filename, base64]);
+        }
+
         const url = "https://keden-bot-backend.onrender.com/kedenbot/uved"
         try {
             const response = await fetch(url, {

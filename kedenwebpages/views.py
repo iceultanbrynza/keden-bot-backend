@@ -6,11 +6,11 @@ import httpx
 import json, os
 from pathlib import Path
 
-json_path = Path(__file__).resolve().parent / 'data' / 'UVEDdata.json'
+json_path = Path(__file__).resolve().parent / 'data' / 'data.json'
 json_path2 = Path(__file__).resolve().parent / 'data' / 'modules.json'
 # Load the JSON
 with open(json_path, 'r', encoding='utf-8') as f:
-    UVED_DATA = json.load(f)
+    DATA = json.load(f)
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
@@ -96,7 +96,7 @@ async def UVEDModules(request:HttpRequest):
         module = request.GET.get('module')
         sect = request.GET.get('sect')
 
-        uved_root = UVED_DATA.get("УВЭД", {})
+        uved_root = DATA.get("УВЭД", {})
         module_data = uved_root.get(module)
 
         # Получить список полей в зависимости от наличия секции
