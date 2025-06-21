@@ -1,0 +1,177 @@
+/* body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fdfdfd;
+    color: #000;
+  }
+
+  .container {
+    padding: 20px;
+    border-radius: 20px;
+    background: #ffffff;
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    line-height: 1.4;
+  }
+
+  .highlight {
+    display: block;
+    font-weight: bold;
+    font-size: 26px;
+  }
+
+  p {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  input {
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .btn {
+    margin-top: 20px;
+    background-color: #9ffbff;
+    padding: 15px;
+    font-size: 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #7feff0;
+  } */
+
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+/* Базовые стили (по умолчанию — для больших экранов, ноутов и ПК) */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fdfdfd;
+  color: #000;
+}
+
+.container {
+  padding: 20px;
+  border-radius: 20px;
+  background: #ffffff;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.highlight {
+  display: block;
+  font-weight: bold;
+  font-size: 26px;
+}
+
+p {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+input {
+  padding: 10px;
+  border: 3px solid black;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.btn {
+  margin-top: 20px;
+  background-color: #9ffbff;
+  padding: 15px;
+  font-size: 20px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #7feff0;
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+    margin-top: 10px;
+    max-width: 92%;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .highlight {
+    font-size: 22px;
+  }
+
+  p, label {
+    font-size: 14px;
+  }
+
+  input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .btn {
+    font-size: 16px;
+    padding: 12px;
+  }
+}

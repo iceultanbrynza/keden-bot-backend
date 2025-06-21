@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.sqlite3
+staticfiles/
+.env
+
+# Mac OS и IDE-шный мусор
+.DS_Store
+.idea/
+.vscode/

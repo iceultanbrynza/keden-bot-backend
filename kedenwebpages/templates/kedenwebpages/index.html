@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keden WebApp</title>
+  <link rel="stylesheet" href="{% static 'kedenwebpages/style.css' %}" />
+  <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Добро пожаловать в бот<br><span class="highlight">Keden!</span></h1>
+    <p>Пожалуйста, введите ваши данные:</p>
+
+    <form id="user-form">
+      <label for="lastName">Фамилия</label>
+      <input type="text" id="lastName" name="lastName" required />
+
+      <label for="firstName">Имя</label>
+      <input type="text" id="firstName" name="firstName" required />
+
+      <label for="middleName">Отчество</label>
+      <input type="text" id="middleName" name="middleName" />
+
+      <label for="phone">Номер телефона</label>
+      <input type="tel" id="phone" name="phone" required />
+
+      <label for="email">Электронная почта, с которой регистрировались</label>
+      <input type="email" id="email" name="email" required />
+
+      <button type="submit" class="btn">{% if mode == 'edit' %}
+                                            Обновить
+                                          {% else %}
+                                            Сохранить
+                                          {% endif %}
+      </button>
+    </form>
+  </div>
+  <script>
+    window.appData = {
+      mode: "{{ mode|escapejs }}"
+    };
+  </script>
+  <script src="{% static 'kedenwebpages/script.js' %}?v={{ STATIC_VERSION }}"></script>
+</body>
+</html>

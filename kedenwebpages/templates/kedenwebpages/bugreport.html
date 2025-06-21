@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keden WebApp</title>
+  <link rel="stylesheet" href="{% static 'kedenwebpages/style.css' %}" />
+  <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Добро пожаловать в бот<br><span class="highlight">Keden!</span></h1>
+    <p>Сообщите нам об ошибке, заполнив формы ниже</p>
+
+    <form id="user-form">
+        {% for field in field_names %}
+            <label for="{{ field }}">{{ field }}</label>
+            <input type="text" name="{{ field }}" id="{{ field }}">
+            <br>
+        {% endfor %}
+        <label for="Скрин ошибки">Скрин ошибки</label>
+        <input type="file" name="Скрин ошибки" id="screen" accept="image/*">
+        <label for="Время ошибки">Время ошибки</label>
+        <input type="text" name="Время ошибки">
+        <label for="Видео описание">Видео описание</label>
+        <input type="file" name="Видео описание" accept="video/*">
+
+      <button type="submit" class="btn">Сохранить</button>
+    </form>
+  </div>
+  <script>
+    window.appData = {
+      module_id: "{{ module_id|escapejs }}"
+    };
+  </script>
+  <script src="{% static 'kedenwebpages/scriptuved.js' %}?v={{ STATIC_VERSION }}"></script>
+</body>
+</html>
