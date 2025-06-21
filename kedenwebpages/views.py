@@ -14,7 +14,7 @@ with open(json_path, 'r', encoding='utf-8') as f:
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
-URL = os.environ('BITRIX_API')
+URL = os.environ['BITRIX_API']
 
 # Create your views here.
 @csrf_exempt
