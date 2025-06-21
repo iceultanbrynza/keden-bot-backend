@@ -14,7 +14,7 @@ with open(json_path, 'r', encoding='utf-8') as f:
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
-URL = os.getenv('BITRIX_API')
+URL = os.environ('BITRIX_API')
 
 # Create your views here.
 @csrf_exempt
@@ -74,7 +74,7 @@ async def fetchContactId(request: HttpRequest):
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
         }
-        
+
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(
