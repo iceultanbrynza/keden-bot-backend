@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     tg.ready();
     form = document.getElementById("user-form");
-    const module_id = window.appData.module_id;
+    const module_id = window.appData?.module_id;
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -28,29 +28,60 @@ document.addEventListener("DOMContentLoaded", () => {
                 ufCrm168Text: resultText,
                 ufCrm168FioFromTg: user_name,
                 ufCrm168UserChatId: user_id,
-                contactId: contact_id,
-                ufCrm168SelectModule: module_id
+                contactId: contact_id
             }
         };
 
-        const input = document.getElementById('screen');
-        const file = input.files[0];
-
-        const video = document.getElementById('video');
-        const videofile = video.files[0];
-
-        data.fields.ufCrm168Files = [];
-
-        if(file){
-            const base64 = await fileToBase64(file);
-            const filename = generateFilename('screen', 'png');
-            data.fields.ufCrm168Files.push([filename, base64]);
+        if(module_id!=undefined) {
+            data.fields.ufCrm168SelectModule = module_id;
         }
 
-        if(video){
-            const base64 = await fileToBase64(videofile);
-            const filename = generateFilename('video', 'mp4');
-            data.fields.ufCrm168Files.push([filename, base64]);
+        const fileInputs = [
+            {
+                id: "screen",
+                prefix: "screen",
+                restrection: 5
+            },
+            {
+                id: "video",
+                prefix: "video",
+                restrection: 1
+            },
+            {
+                id: "screen-variable",
+                prefix: "screen-var",
+                restrection: 2
+            },
+            {
+                id: "video-variable",
+                prefix: "video-var",
+                restrection: 1
+            },
+            {
+                id: "doc",
+                prefix: "doc",
+                restrection: 1
+            }
+        ];
+
+        for(const fileInput of fileInputs){
+            const input = document.getElementById(fileInput.id);
+            if (!input || !input.files) continue;
+            if(input.files.length>fileInput.restrection){
+                alert(`Можно загрузить не более ${fileInput.restrection} файлов`);
+                input.value = ''; // сбрасываем выбор
+                return;
+            }
+
+            if(input.files && input.files.length > 0){
+                data.fields.ufCrm168Files = [];
+                for(const file of input.files){
+                    const base64 = await fileToBase64(file);
+                    const filename = generateFilename('screen', 'png');
+                    data.fields.ufCrm168Files.push([filename, base64]);
+                }
+            }
+
         }
 
         const url = "https://keden-bot-backend.onrender.com/kedenbot/uved"

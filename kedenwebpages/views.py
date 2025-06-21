@@ -97,13 +97,21 @@ async def UVEDModules(request:HttpRequest):
         sect = request.GET.get('sect')
 
         uved_root = DATA.get("УВЭД", {})
-        module_data = uved_root.get(module)
+        options = uved_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
 
-        # Получить список полей в зависимости от наличия секции
-        field_names = module_data.get(sect) if sect else module_data
+        fields = options.get(sect).get('Поля') if sect else options.get('Поля')
+
+        screens = options.get(sect).get('Скрины') if sect else options.get('Скрины')
+
+        video = options.get(sect).get('Видео') if sect else options.get('Видео')
+
+        doc = options.get(sect).get('Документ') if sect else options.get('Документ')
 
         context = {
-            "field_names": field_names or []
+            "field_names": fields or [],
+            "screens": screens,
+            "video": video,
+            "doc": doc
         }
 
         # Добавить module_id, если есть

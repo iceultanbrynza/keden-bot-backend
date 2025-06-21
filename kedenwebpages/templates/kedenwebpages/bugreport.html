@@ -20,8 +20,24 @@
             <input type="text" name="{{ field }}" id="{{ field }}">
             <br>
         {% endfor %}
+
+        {% if doc %}
+        <label for="Документ">{{ doc }}</label>
+        <input type="file" name="Документ" id="doc" accept="pdf/*">
+        {% endif %}
+
+        {% if screens %}
+        <label for="Скрин переменный">{{ screens }}</label>
+        <input type="file" name="Скрин переменный" id="screen-variable" accept="image/*" multiple>
+        {% endif %}
+
+        {% if video %}
+        <label for="Видео переменный">{{ video }}</label>
+        <input type="file" name="Видео переменный" id="video-variable" accept="video/*">
+        {% endif %}
+
         <label for="Скрин ошибки">Скрин ошибки</label>
-        <input type="file" name="Скрин ошибки" id="screen" accept="image/*">
+        <input type="file" name="Скрин ошибки" id="screen" accept="image/*" multiple>
         <label for="Время ошибки">Время ошибки</label>
         <input type="text" name="Время ошибки">
         <label for="Видео описание">Видео описание</label>
