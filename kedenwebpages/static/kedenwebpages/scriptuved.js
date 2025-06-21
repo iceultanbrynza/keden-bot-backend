@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
+    if (!tg) {
+        console.warn("Not in Telegram WebView");
+        return;
+    }
     tg.ready();
     form = document.getElementById("user-form");
     const module_id = window.appData.module_id;
