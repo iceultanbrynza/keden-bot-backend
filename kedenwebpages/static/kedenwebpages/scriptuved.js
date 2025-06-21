@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         ];
 
+        data.fields.ufCrm168Files = [];
+
         for(const fileInput of fileInputs){
             const input = document.getElementById(fileInput.id);
             if (!input || !input.files) continue;
@@ -74,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if(input.files && input.files.length > 0){
-                data.fields.ufCrm168Files = [];
                 for(const file of input.files){
                     const base64 = await fileToBase64(file);
                     const filename = generateFilename('screen', 'png');
