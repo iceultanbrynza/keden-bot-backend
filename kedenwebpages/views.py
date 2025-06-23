@@ -237,7 +237,9 @@ async def return_filled_application_form(request:HttpRequest, id:int):
 @csrf_exempt
 async def notify_users_about_progress(request:HttpRequest):
     if request.method == "POST":
-        body = request.body
-        data = json.loads(body)
-        print(data)
+        print("FROM BITRIX:", request.POST)
+        try:
+            print(request.POST.get('data[FIELDS][ID]'))
+        except:
+            print('не получилось')
         return JsonResponse({'result': 'OK'}, status=200)
