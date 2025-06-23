@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        submitButton.disabled = true;         // 🔒 отключаем кнопку
-        submitButton.textContent = "Отправка..."; // можно изменить текст
+        submitButton.disabled = true;         // отключаем кнопку
+        submitButton.textContent = "Подождите, пожалуйста";
 
         const contact_id = await getContact();
         const user_id = tg.initDataUnsafe.user?.id;
@@ -44,27 +44,32 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 id: "screen",
                 prefix: "screen",
-                restrection: 5
+                restrection: 5,
+                extenstion: "png"
             },
             {
                 id: "video",
                 prefix: "video",
-                restrection: 1
+                restrection: 1,
+                extenstion: "mp4"
             },
             {
                 id: "screen-variable",
                 prefix: "screen-var",
-                restrection: 2
+                restrection: 2,
+                extenstion: "png"
             },
             {
                 id: "video-variable",
                 prefix: "video-var",
-                restrection: 1
+                restrection: 1,
+                extenstion: "mp4"
             },
             {
                 id: "doc",
                 prefix: "doc",
-                restrection: 1
+                restrection: 1,
+                extenstion: "pdf"
             }
         ];
 
@@ -89,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         return;
                     }
                     const base64 = await fileToBase64(file);
-                    const filename = generateFilename('screen', 'png');
+                    const filename = generateFilename(fileInput.prefix, fileInput.extenstion);
                     data.fields.ufCrm168Files.push([filename, base64]);
                 }
             }

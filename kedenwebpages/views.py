@@ -84,7 +84,9 @@ async def fetchContactId(request: HttpRequest):
                 print(result)
                 return JsonResponse(result)
             except httpx.RequestError as e:
-                return JsonResponse({'error': str(e)}, status=500)
+                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
 
 @csrf_exempt
 async def UVEDModules(request:HttpRequest):
@@ -133,4 +135,100 @@ async def UVEDModules(request:HttpRequest):
                 response = await client.post(f'{URL}/crm.item.add', json=data)
                 return JsonResponse(response.json())
             except httpx.RequestError as e:
-                return JsonResponse({'error': str(e)}, status=500)
+                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
+
+@csrf_exempt
+async def UDLModules(request:HttpRequest):
+    if request.method == 'GET':
+        # ALL GET REQUEST MUST CONTAIN param type which can be equal to ПИ, ДТ и т.д.
+        module = request.GET.get('module')
+        sect = request.GET.get('sect')
+
+        udl_root = DATA.get("УДЛ", {})
+        options = udl_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
+
+        fields = options.get(sect).get('Поля') if sect else options.get('Поля')
+
+        screens = options.get(sect).get('Скрины') if sect else options.get('Скрины')
+
+        video = options.get(sect).get('Видео') if sect else options.get('Видео')
+
+        doc = options.get(sect).get('Документ') if sect else options.get('Документ')
+
+        context = {
+            "field_names": fields or [],
+            "screens": screens,
+            "video": video,
+            "doc": doc
+        }
+
+        # Добавить module_id, если есть
+        module_id = MODULES.get(module)
+        if module_id:
+            context["module_id"] = module_id
+
+        return render(request, 'kedenwebpages/bugreport.html', context=context)
+
+    if request.method == 'POST':
+        body = request.body
+        data = json.loads(body)
+        print(len(data['fields']['ufCrm168Files']))
+        # entityTypeId = data['entityTypeId']
+        # text = data['fields']
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(f'{URL}/crm.item.add', json=data)
+                return JsonResponse(response.json())
+            except httpx.RequestError as e:
+                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
+
+@csrf_exempt
+async def return_filled_application_form(request:HttpRequest, id:int):
+    # передавай параметр id
+    if request.method == 'GET':
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(f'{URL}/crm.item.list.json?entityTypeId=1444&filter[id]={id}')
+
+            except httpx.RequestError as e:
+                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
+
+            else:
+                result = response.json().get('result', {})
+                items = result.get('items', [])
+                if not items:
+                    return
+
+        fields_for_context: dict[str, str] = {}
+        files_for_context: list[str] = []
+
+        item = items[0]
+        text = item['ufCrm168Text']
+
+        fields = text.split('\n')
+
+        for field in fields:
+            try:
+                key, value = field.split(': ', 1)
+            except ValueError:
+                continue  # строка без ': ', пропускаем
+
+            if 'Скрин' in key or 'Видео' in key:
+                files_for_context.append(key)
+                continue
+
+            fields_for_context[key] = value
+
+        context = {
+            'fields': files_for_context,
+            'files': files_for_context
+        }
+
+        return render(request, 'kedenwebpages/myapplication.html', context=context)

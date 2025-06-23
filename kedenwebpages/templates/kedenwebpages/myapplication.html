@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'kedenwebpages/style.css' %}" />
+    <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Добро пожаловать в бот<br><span class="highlight">Keden!</span></h1>
+    <p>Ваше заполненное заявление</p>
+    <form id="user-form">
+        {% for key, value in fields.items() %}
+            <label for="{{ key }}">{{ key }}</label>
+            <input type="text" name="{{ key }}" id="{{ key }}" value="{{ value }}" readonly>
+            <br>
+        {% endfor %}
+
+        {% for key in files %}
+            <label for="{{ key }}">{{ key }}</label>
+            <input type="file" name="{{ key }}" id="{{ key }}" disabled>
+            <br>
+        {% endfor %}
+
+
+      <button type="submit" class="btn" disabled>Сохранить</button>
+    </form>
+
+</body>
+</html>
