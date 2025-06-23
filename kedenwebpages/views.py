@@ -227,7 +227,7 @@ async def return_filled_application_form(request:HttpRequest, id:int):
             fields_for_context[key] = value
 
         context = {
-            'fields': files_for_context,
+            'fields': fields_for_context,
             'files': files_for_context
         }
 

@@ -27,13 +27,13 @@
         {% endif %}
 
         {% if screens %}
-        <label for="Скрин переменный">{{ screens }}</label>
-        <input type="file" name="Скрин переменный" id="screen-variable" accept="image/*" multiple>
+        <label for="{{ screens }}">{{ screens }}</label>
+        <input type="file" name="{{ screens }}" id="screen-variable" accept="image/*" multiple>
         {% endif %}
 
         {% if video %}
-        <label for="Видео переменный">{{ video }}</label>
-        <input type="file" name="Видео переменный" id="video-variable" accept="video/*">
+        <label for="{{ video }}">{{ video }}</label>
+        <input type="file" name="{{ video }}" id="video-variable" accept="video/*">
         {% endif %}
 
         <label for="Скрин ошибки">Скрин ошибки</label>
