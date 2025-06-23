@@ -7,9 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
     tg.ready();
     form = document.getElementById("user-form");
     const module_id = window.appData?.module_id;
+    const MAX_SIZE = 50 * 1024 * 1024;
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
+        submitButton.disabled = true;         // 🔒 отключаем кнопку
+        submitButton.textContent = "Отправка..."; // можно изменить текст
 
         const contact_id = await getContact();
         const user_id = tg.initDataUnsafe.user?.id;
@@ -65,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
 
         data.fields.ufCrm168Files = [];
+        let overall_size = 0;
 
         for(const fileInput of fileInputs){
             const input = document.getElementById(fileInput.id);
@@ -77,6 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if(input.files && input.files.length > 0){
                 for(const file of input.files){
+                    overall_size += file.size;
+                    if(overall_size > MAX_SIZE){
+                        alert(`Можно загрузить не более ${MAX_SIZE} файлов`);
+                        input.value = ''; // сбрасываем выбор
+                        return;
+                    }
                     const base64 = await fileToBase64(file);
                     const filename = generateFilename('screen', 'png');
                     data.fields.ufCrm168Files.push([filename, base64]);

@@ -124,7 +124,7 @@ async def UVEDModules(request:HttpRequest):
     if request.method == 'POST':
         body = request.body
         data = json.loads(body)
-
+        print(len(data['fields']['ufCrm168Files']))
         # entityTypeId = data['entityTypeId']
         # text = data['fields']
 
