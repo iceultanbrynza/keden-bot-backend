@@ -21,7 +21,7 @@
 
         {% for key in files %}
             <label for="{{ key }}">{{ key }}</label>
-            <input type="file" name="{{ key }}" id="{{ key }}" disabled>
+            <input type="text" name="{{ key }}" id="{{ key }}" value="Ваш файл загружен" readonly>
             <br>
         {% endfor %}
 

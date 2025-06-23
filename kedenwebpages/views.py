@@ -35,8 +35,7 @@ async def RegisterView(request: HttpRequest):
             async with httpx.AsyncClient() as client:
                 response = await client.post(f'{URL}/crm.contact.update',
                                             json=data, headers=headers)
-                print(response.status_code)
-                print(response.json())
+
 
         else:
             headers = {
@@ -52,8 +51,7 @@ async def RegisterView(request: HttpRequest):
             async with httpx.AsyncClient() as client:
                 response = await client.post(f'{URL}/crm.contact.add',
                                             json=data, headers=headers)
-                print(response.status_code)
-                print(response.json())
+
 
             content = {
                 'result': 'ok'
@@ -80,11 +78,10 @@ async def fetchContactId(request: HttpRequest):
                 response = await client.post(
                     f'{URL}/crm.contact.list?filter[UF_CRM_CHAT_ID]={chat_id}', headers=headers
                 )
-                result = response.json()
-                print(result)
-                return JsonResponse(result)
+                json_data = await response.json()
+                return JsonResponse(json_data)
             except httpx.RequestError as e:
-                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
 
@@ -133,9 +130,10 @@ async def UVEDModules(request:HttpRequest):
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
-                return JsonResponse(response.json())
+                json_data = await response.json()
+                return JsonResponse(json_data)
             except httpx.RequestError as e:
-                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
 
@@ -181,9 +179,10 @@ async def UDLModules(request:HttpRequest):
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
-                return JsonResponse(response.json())
+                json_data = await response.json()
+                return JsonResponse(json_data)
             except httpx.RequestError as e:
-                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
 
@@ -196,12 +195,13 @@ async def return_filled_application_form(request:HttpRequest, id:int):
                 response = await client.post(f'{URL}/crm.item.list.json?entityTypeId=1444&filter[id]={id}')
 
             except httpx.RequestError as e:
-                return HttpRequest(request, 'kedenwebpages/error.html', context={
+                return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
 
             else:
-                result = response.json().get('result', {})
+                json_data = await response.json()
+                result = json_data.get('result', {})
                 items = result.get('items', [])
                 if not items:
                     return
@@ -220,7 +220,7 @@ async def return_filled_application_form(request:HttpRequest, id:int):
             except ValueError:
                 continue  # строка без ': ', пропускаем
 
-            if 'Скрин' in key or 'Видео' in key:
+            if 'Скрин' in key or 'Видео' in key or 'Фото' in key:
                 files_for_context.append(key)
                 continue
 
@@ -232,3 +232,11 @@ async def return_filled_application_form(request:HttpRequest, id:int):
         }
 
         return render(request, 'kedenwebpages/myapplication.html', context=context)
+
+# outbound webhook requests
+@csrf_exempt
+async def notify_users_about_progress(request:HttpRequest):
+    if request.method == "POST":
+        body = request.body
+        data = json.loads(body)
+        print(data)

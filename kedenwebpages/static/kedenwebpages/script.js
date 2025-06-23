@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tg = window.Telegram.WebApp;
   tg.ready();
-  if (!tg || !tg.initDataUnsafe?.user?.id) {
-    alert("Откройте WebApp из Telegram");
-  }
+  // if (!tg || !tg.initDataUnsafe?.user?.id) {
+  //   alert("Откройте WebApp из Telegram");
+  // }
   let contactId;
   const mode = window.appData.mode;
   const form = document.getElementById("user-form");
@@ -53,9 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const user_id = tg.initDataUnsafe.user?.id;
-    if(!user_id){
-      alert('user id не определен');
-    }
+    
     let data = {
       FIELDS:{
           LAST_NAME: form.lastName.value,
@@ -96,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } else {
       try {
-        alert(JSON.stringify(data));
         const response = await fetch("https://keden-bot-backend.onrender.com/kedenbot/register", {
           method: "POST",
           headers: {
