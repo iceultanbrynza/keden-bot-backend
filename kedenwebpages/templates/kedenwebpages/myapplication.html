@@ -13,7 +13,7 @@
     <h1>Добро пожаловать в бот<br><span class="highlight">Keden!</span></h1>
     <p>Ваше заполненное заявление</p>
     <form id="user-form">
-        {% for key, value in fields.items() %}
+        {% for key, value in fields.items %}
             <label for="{{ key }}">{{ key }}</label>
             <input type="text" name="{{ key }}" id="{{ key }}" value="{{ value }}" readonly>
             <br>
