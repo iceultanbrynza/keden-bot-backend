@@ -240,3 +240,4 @@ async def notify_users_about_progress(request:HttpRequest):
         body = request.body
         data = json.loads(body)
         print(data)
+        return JsonResponse({'result': 'OK'}, status=200)
