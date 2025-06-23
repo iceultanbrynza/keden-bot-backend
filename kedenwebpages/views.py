@@ -78,7 +78,7 @@ async def fetchContactId(request: HttpRequest):
                 response = await client.post(
                     f'{URL}/crm.contact.list?filter[UF_CRM_CHAT_ID]={chat_id}', headers=headers
                 )
-                json_data = await response.json()
+                json_data = response.json()
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
@@ -130,7 +130,7 @@ async def UVEDModules(request:HttpRequest):
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
-                json_data = await response.json()
+                json_data = response.json()
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
@@ -179,7 +179,7 @@ async def UDLModules(request:HttpRequest):
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
-                json_data = await response.json()
+                json_data = response.json()
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
@@ -200,7 +200,7 @@ async def return_filled_application_form(request:HttpRequest, id:int):
                 })
 
             else:
-                json_data = await response.json()
+                json_data = response.json()
                 result = json_data.get('result', {})
                 items = result.get('items', [])
                 if not items:
