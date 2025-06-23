@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form = document.getElementById("user-form");
     const module_id = window.appData?.module_id;
     const MAX_SIZE = 50 * 1024 * 1024;
+    const submitButton = form.querySelector("button[type=submit]");
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -116,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(url, {
                 method: "GET",
+                headers: { 'Content-Type': 'application/json' }
             });
 
             const result = await response.json();
