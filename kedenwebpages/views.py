@@ -15,6 +15,7 @@ with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
 URL = os.environ['BITRIX_API']
+TELEGRAM_API = os.environ['TELEGRAM_API']
 
 # Create your views here.
 @csrf_exempt
@@ -235,11 +236,48 @@ async def return_filled_application_form(request:HttpRequest, id:int):
 
 # outbound webhook requests
 @csrf_exempt
-async def notify_users_about_progress(request:HttpRequest):
+async def notify_user_about_registration(request:HttpRequest):
     if request.method == "POST":
         print("FROM BITRIX:", request.POST)
-        try:
-            print(request.POST.get('data[FIELDS][ID]'))
-        except:
-            print('не получилось')
+        id = request.POST.get('data[FIELDS][ID]')
+        event = request.POST.get('event')
+
+        # request on Bitrix for obtaining chat id
+        req = f'{URL}/crm.contact.get'
+        params = {
+            'ID': id
+        }
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(req, params=params)
+
+            except httpx.RequestError as e:
+                return render(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
+
+            else:
+                res = response.json()
+                result = res.get('result', {})
+                chat_id = result.get('UF_CRM_CHAT_ID', '')
+
+        # send message to Telegram
+        url = f'{TELEGRAM_API}/sendMessage'
+        text = "Вы успешно обновили данные регистрации" if event == 'ONCRMCONTACTUPDATE' else "Вы успешно зарегистрировались"
+
+        payload = {
+            'chat_id': chat_id,
+            'text': text
+        }
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(url, data=payload)
+
+            except httpx.RequestError as e:
+                return render(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
+
+
         return JsonResponse({'result': 'OK'}, status=200)
