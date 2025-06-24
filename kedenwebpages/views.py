@@ -148,13 +148,13 @@ async def UDLModules(request:HttpRequest):
         udl_root = DATA.get("УДЛ", {})
         options = udl_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
 
-        fields = options.get(sect).get('Поля') if sect else options.get('Поля')
+        fields = options.get(sect, {}).get('Поля') if sect else options.get('Поля')
 
-        screens = options.get(sect).get('Скрины') if sect else options.get('Скрины')
+        screens = options.get(sect, {}).get('Скрины') if sect else options.get('Скрины')
 
-        video = options.get(sect).get('Видео') if sect else options.get('Видео')
+        video = options.get(sect, {}).get('Видео') if sect else options.get('Видео')
 
-        doc = options.get(sect).get('Документ') if sect else options.get('Документ')
+        doc = options.get(sect, {}).get('Документ') if sect else options.get('Документ')
 
         context = {
             "field_names": fields or [],
