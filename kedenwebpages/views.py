@@ -272,12 +272,11 @@ async def notify_user_about_registration(request:HttpRequest):
 
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.get(url, data=payload)
+                response = await client.get(url, json=payload)
 
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
-
 
         return JsonResponse({'result': 'OK'}, status=200)
