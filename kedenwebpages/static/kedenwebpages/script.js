@@ -1,30 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tg = window.Telegram.WebApp;
   tg.ready();
-  // if (!tg || !tg.initDataUnsafe?.user?.id) {
-  //   alert("Откройте WebApp из Telegram");
-  // }
   let contactId;
   const mode = window.appData.mode;
   const form = document.getElementById("user-form");
-
-  async function getContact(){
-    const user_id = tg.initDataUnsafe.user?.id;
-    const url = new URL("https://keden-bot-backend.onrender.com/kedenbot/contactid");
-    url.searchParams.set("UF_CRM_CHAT_ID", user_id);
-
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-      });
-
-      const result = await response.json();
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
   if(mode === 'edit'){
     (async () => {
@@ -53,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const user_id = tg.initDataUnsafe.user?.id;
-    
+
     let data = {
       FIELDS:{
           LAST_NAME: form.lastName.value,
@@ -111,4 +90,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     tg.close(); // закрыть WebApp
     });
+
+    async function getContact(){
+      const user_id = tg.initDataUnsafe.user?.id;
+      const url = new URL("https://keden-bot-backend.onrender.com/kedenbot/contactid");
+      url.searchParams.set("UF_CRM_CHAT_ID", user_id);
+
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+        });
+
+        const result = await response.json();
+        console.log(result);
+        return result;
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
 });
