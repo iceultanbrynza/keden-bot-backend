@@ -122,7 +122,8 @@ async def UVEDModules(request:HttpRequest):
             "field_names": fields or [],
             "screens": screens,
             "video": video,
-            "doc": doc
+            "doc": doc,
+            "role": 'uved'
         }
 
         # Добавить module_id, если есть
@@ -171,7 +172,8 @@ async def UDLModules(request:HttpRequest):
             "field_names": fields or [],
             "screens": screens,
             "video": video,
-            "doc": doc
+            "doc": doc,
+            "role": 'udl'
         }
 
         # Добавить module_id, если есть
