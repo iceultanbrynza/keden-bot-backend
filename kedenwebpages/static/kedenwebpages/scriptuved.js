@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     tg.ready();
 
-    form = document.getElementById("user-form");
+    const form = document.getElementById("user-form");
     const submitButton = form.querySelector("button[type=submit]");
     const module_id = window.appData?.module_id;
     const role = window.appData?.role;
