@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     (async () => {
       const result = await getContact();
-      if (!result || !result.result || result.result.length === 0) {
+      if (result.result || result.result.length === 0) {
         alert('Вы уже зарегистрированы! Попробуйте наши функции')
         return;
       }

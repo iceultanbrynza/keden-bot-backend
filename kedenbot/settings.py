@@ -130,3 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_VERSION = str(int(time.time()))
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+
