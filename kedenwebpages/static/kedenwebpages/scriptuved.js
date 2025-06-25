@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     tg.ready();
-    
+
     form = document.getElementById("user-form");
     const submitButton = form.querySelector("button[type=submit]");
     const module_id = window.appData?.module_id;
-    const role = window.appData?.module_id;
+    const role = window.appData?.role;
     let url;
     const MAX_SIZE = 50 * 1024 * 1024;
 
