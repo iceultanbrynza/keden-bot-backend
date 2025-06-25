@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(input.files.length>fileInput.restrection){
                 alert(`Можно загрузить не более ${fileInput.restrection} файлов`);
                 input.value = ''; // сбрасываем выбор
+                loader.style.display = "none";
                 return;
             }
 
@@ -96,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if(overall_size > MAX_SIZE){
                         alert(`Можно загрузить не более ${MAX_SIZE} файлов`);
                         input.value = ''; // сбрасываем выбор
+                        loader.style.display = "none";
                         return;
                     }
                     const base64 = await fileToBase64(file);
