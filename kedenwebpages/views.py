@@ -63,7 +63,7 @@ async def RegisterView(request: HttpRequest):
                         'status': 500
                     })
 
-            redis_client.set(str(chat_id), 1, ex=3600)
+            await redis_client.set(str(chat_id), 1, ex=3600)
 
             content = {
                 'result': 'ok'
