@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let contactId;
   const mode = window.appData.mode;
   const form = document.getElementById("user-form");
-
+  
   if(mode === 'edit'){
     (async () => {
       const result = await getContact();

@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("user-form");
     const submitButton = form.querySelector("button[type=submit]");
+    const loader = document.getElementById("loader-overlay");
     const module_id = window.appData?.module_id;
     const role = window.appData?.role;
     let url;
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
+        loader.style.display = "flex";
         submitButton.disabled = true;         // отключаем кнопку
         submitButton.textContent = "Подождите, пожалуйста";
 
