@@ -48,7 +48,8 @@
   </div>
   <script>
     window.appData = {
-      module_id: "{{ module_id|escapejs }}"
+      module_id: "{{ module_id|escapejs }}",
+      role: "{{ role|escapejs }}"
     };
   </script>
   <script src="{% static 'kedenwebpages/scriptuved.js' %}?v={{ STATIC_VERSION }}"></script>

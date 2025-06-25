@@ -9,10 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     (async () => {
       const result = await getContact();
       if (!result || !result.result || result.result.length === 0) {
-        console.log("Контакт не найден");
+        alert('Вы не зарегистрированы!')
         return;
       }
-      console.log(result);
       let contact;
       if(Array.isArray(result.result)){
         contact = result.result[0];
@@ -25,6 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("middleName").value = contact.SECOND_NAME || '';
       document.getElementById("phone").value = contact.PHONE?.[0]?.VALUE || '';
       document.getElementById("email").value = contact.EMAIL?.[0]?.VALUE || '';
+    })();
+  } else {
+    (async () => {
+      const result = await getContact();
+      if (!result || !result.result || result.result.length === 0) {
+        alert('Вы уже зарегистрированы! Попробуйте наши функции')
+        return;
+      }
     })();
   }
 
@@ -64,8 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify(data)
         });
-
-
         const result = await response.json();
         console.log("Server response:", result);
       } catch (error) {
@@ -80,10 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify(data)
         });
-
-
         const result = await response.json();
-        console.log("Server response:", result);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -102,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const result = await response.json();
-        console.log(result);
         return result;
       } catch (error) {
         console.error("Error:", error);

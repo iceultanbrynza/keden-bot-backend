@@ -6,14 +6,17 @@ import httpx
 import json, os
 from pathlib import Path
 
+from .redis_async import redis_client
+
+# Load the JSON
 json_path = Path(__file__).resolve().parent / 'data' / 'data.json'
 json_path2 = Path(__file__).resolve().parent / 'data' / 'modules.json'
-# Load the JSON
 with open(json_path, 'r', encoding='utf-8') as f:
     DATA = json.load(f)
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
+# Urls
 URL = os.environ['BITRIX_API']
 TELEGRAM_API = os.environ['TELEGRAM_API']
 
@@ -24,7 +27,7 @@ async def RegisterView(request: HttpRequest):
     context = {'mode': mode}
 
     if request.method == 'POST':
-        mode = request.GET.get('mode', 'register')
+        # mode = request.GET.get('mode', 'register')
         if mode == 'edit':
             body = request.body
             data = json.loads(body)
@@ -37,6 +40,7 @@ async def RegisterView(request: HttpRequest):
                 response = await client.post(f'{URL}/crm.contact.update',
                                             json=data, headers=headers)
 
+            return JsonResponse({'result': 'updated'})
 
         else:
             headers = {
@@ -47,12 +51,19 @@ async def RegisterView(request: HttpRequest):
             body = request.body
             data = json.loads(body)
 
-            print(data)
+            fields = data.get('FIELDS')
+            chat_id = fields.get('UF_CRM_CHAT_ID')
 
             async with httpx.AsyncClient() as client:
-                response = await client.post(f'{URL}/crm.contact.add',
-                                            json=data, headers=headers)
+                try:
+                    response = await client.post(f'{URL}/crm.contact.add',
+                                                json=data, headers=headers)
+                except httpx.RequestError as e:
+                    return render(request, 'kedenwebpages/error.html', context={
+                        'status': 500
+                    })
 
+            redis_client.set(str(chat_id), 1, ex=3600)
 
             content = {
                 'result': 'ok'

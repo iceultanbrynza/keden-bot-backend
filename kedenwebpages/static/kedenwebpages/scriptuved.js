@@ -5,10 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     tg.ready();
+    
     form = document.getElementById("user-form");
-    const module_id = window.appData?.module_id;
-    const MAX_SIZE = 50 * 1024 * 1024;
     const submitButton = form.querySelector("button[type=submit]");
+    const module_id = window.appData?.module_id;
+    const role = window.appData?.module_id;
+    let url;
+    const MAX_SIZE = 50 * 1024 * 1024;
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -100,8 +103,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         }
-
-        const url = "https://keden-bot-backend.onrender.com/kedenbot/uved"
+        if(role == 'uved') {
+            url = "https://keden-bot-backend.onrender.com/kedenbot/uved"
+        } else{
+            url = "https://keden-bot-backend.onrender.com/kedenbot/udl"
+        }
         try {
             const response = await fetch(url, {
                 method: "POST",
