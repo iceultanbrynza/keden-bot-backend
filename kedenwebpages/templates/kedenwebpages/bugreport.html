@@ -22,8 +22,8 @@
         {% endfor %}
 
         {% if doc %}
-        <label for="Документ">{{ doc }}</label>
-        <input type="file" name="Документ" id="doc" accept="pdf/*">
+        <label for="doc">{{ doc }}</label>
+        <input type="file" name="Документ" id="doc" accept="application/pdf">
         {% endif %}
 
         {% if screens %}
@@ -50,7 +50,7 @@
   <div id="loader-overlay">
     <div class="loader-spinner"></div>
   </div>
-  
+
   <script>
     window.appData = {
       module_id: "{{ module_id|escapejs }}",

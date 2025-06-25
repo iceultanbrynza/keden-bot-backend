@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert(`Можно загрузить не более ${fileInput.restrection} файлов`);
                 input.value = ''; // сбрасываем выбор
                 loader.style.display = "none";
+                submitButton.disabled = false;
+                submitButton.textContent = "Сохранить";
                 return;
             }
 
@@ -98,6 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         alert(`Можно загрузить не более ${MAX_SIZE} файлов`);
                         input.value = ''; // сбрасываем выбор
                         loader.style.display = "none";
+                        submitButton.disabled = false;
+                        submitButton.textContent = "Сохранить";
                         return;
                     }
                     const base64 = await fileToBase64(file);
