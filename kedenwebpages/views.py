@@ -229,7 +229,7 @@ async def return_filled_application_form(request:HttpRequest, id:int):
             except ValueError:
                 continue  # строка без ': ', пропускаем
 
-            if 'Скрин' in key or 'Видео' in key or 'Фото' in key:
+            if 'Скрин' in key or 'Видео' in key or 'Фото' in key or 'Документ' in key or 'ПДФ' in key:
                 files_for_context.append(key)
                 continue
 
