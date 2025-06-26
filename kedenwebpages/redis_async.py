@@ -1,10 +1,12 @@
 import os
 import redis.asyncio as redis
-
+from kedenbot.settings import (REDIS_HOST,
+                               REDIS_PORT,
+                               REDIS_PASSWORD)
 redis_client = redis.Redis(
-    host=os.environ['REDIS_HOST'],
-    port=int(os.environ['REDIS_PORT']),
+    host=REDIS_HOST,
+    port=int(REDIS_PORT),
     decode_responses=True,
     username="default",
-    password=os.environ['REDIS_PASSWORD']
+    password=REDIS_PASSWORD
 )

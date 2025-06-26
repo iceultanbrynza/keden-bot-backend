@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from kedenbot.settings import URL
 
 import httpx
 import json, os
@@ -15,10 +16,6 @@ with open(json_path, 'r', encoding='utf-8') as f:
     DATA = json.load(f)
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
-
-# Urls
-URL = os.environ['BITRIX_API']
-TELEGRAM_API = os.environ['TELEGRAM_API']
 
 # Create your views here.
 @csrf_exempt
@@ -187,8 +184,6 @@ async def UDLModules(request:HttpRequest):
         body = request.body
         data = json.loads(body)
         print(len(data['fields']['ufCrm168Files']))
-        # entityTypeId = data['entityTypeId']
-        # text = data['fields']
 
         async with httpx.AsyncClient() as client:
             try:
