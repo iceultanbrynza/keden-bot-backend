@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
+        const formData = new FormData(form);
+        if(await isFormEmpty(formData)){
+            alert('Заполните поля, чтобы мы могли понять Вашу проблему');
+            return;
+        }
+
         loader.style.display = "flex";
         submitButton.disabled = true;         // отключаем кнопку
         submitButton.textContent = "Подождите, пожалуйста";
@@ -24,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const user_id = tg.initDataUnsafe.user?.id;
         const user_name = tg.initDataUnsafe.user?.username;
 
-        const formData = new FormData(form);
         let resultText = "";
 
         for (const [key, value] of formData.entries()) {
@@ -105,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         return;
                     }
                     const base64 = await fileToBase64(file);
-                    const filename = generateFilename(fileInput.prefix, fileInput.extenstion);
+                    const filename = await generateFilename(fileInput.prefix, fileInput.extenstion);
                     data.fields.ufCrm168Files.push([filename, base64]);
                 }
             }
@@ -161,8 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
-    }
-    function generateFilename(prefix = "file", extension = "png") {
+    };
+    async function generateFilename(prefix = "file", extension = "png") {
         const now = new Date();
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, '0');
@@ -171,5 +176,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const min = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
         return `${prefix}_${y}${m}${d}_${h}${min}${s}.${extension}`;
-      }
+      };
+    async function isFormEmpty(formData){
+        for(const [_, value] of formData.entries()){
+            if(!(value instanceof File)){
+                if(typeof value === 'string' && value.trim() !== ''){
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
 });
