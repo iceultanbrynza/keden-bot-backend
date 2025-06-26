@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let contactId;
   const mode = window.appData.mode;
   const form = document.getElementById("user-form");
-  
+
   if(mode === 'edit'){
     (async () => {
       const result = await getContact();
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await getContact();
       if (result.result && result.result.length > 0) {
         alert('Вы уже зарегистрированы! Попробуйте наши функции')
+        tg.close()
         return;
       }
     })();
