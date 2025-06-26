@@ -98,7 +98,7 @@ input {
 /* Адаптация под мобильные устройства */
 @media (max-width: 480px) {
   .container {
-    padding: 15px;
+    padding: 24px;
     margin-top: 10px;
     max-width: 92%;
   }
