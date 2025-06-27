@@ -143,7 +143,7 @@ async def UVEDModules(request:HttpRequest):
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
                 json_data = response.json()
-                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={message_id}')
+                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
