@@ -52,6 +52,15 @@ input {
   outline: none;
 }
 
+textarea.auto-resize {
+  width: 100%;
+  min-height: 60px;
+  max-height: 200px;
+  overflow: hidden;
+  resize: none;
+  box-sizing: border-box;
+}
+
 .btn {
   margin-top: 20px;
   background-color: #15cfe8;

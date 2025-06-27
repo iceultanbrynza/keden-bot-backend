@@ -6,6 +6,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     tg.ready();
 
+    const textareas = document.querySelectorAll('textarea.auto-resize');
+    textareas.forEach(textarea => {
+        textarea.style.height = textarea.scrollHeight + 'px';
+
+        document.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+    });
+
+
     const form = document.getElementById("user-form");
     const submitButton = form.querySelector("button[type=submit]");
     const loader = document.getElementById("loader-overlay");

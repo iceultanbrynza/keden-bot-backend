@@ -25,7 +25,13 @@
       <input type="text" id="middleName" name="middleName" />
 
       <label for="phone">Номер телефона</label>
-      <input type="tel" id="phone" name="phone" required />
+      <input type="tel"
+      id="phone"
+      name="phone"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+      required />
 
       <label for="email">Электронная почта, с которой регистрировались</label>
       <input type="email" id="email" name="email" required />
