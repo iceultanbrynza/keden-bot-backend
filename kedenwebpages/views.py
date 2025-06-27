@@ -104,6 +104,7 @@ async def UVEDModules(request:HttpRequest):
         module = request.GET.get('module')
         sect = request.GET.get('sect')
         message_id = request.GET.get('msg_id')
+        chat_id = request.GET.get('c_id')
 
         uved_root = DATA.get("УВЭД", {})
         options = uved_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
@@ -122,7 +123,8 @@ async def UVEDModules(request:HttpRequest):
             "video": video,
             "doc": doc,
             "role": 'uved',
-            "message_id": message_id
+            "message_id": message_id,
+            "chat_id": chat_id
         }
         print(message_id)
         # Добавить module_id, если есть
