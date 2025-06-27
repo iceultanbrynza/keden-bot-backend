@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const module_id = window.appData?.module_id;
     const role = window.appData?.role;
     const message_id = window.appData?.message_id;
-    const chat_id = tg.initDataUnsafe.chat?.id;
+    const chat_id = window.appData?.chat_id;
     let url;
     const MAX_SIZE = 50 * 1024 * 1024;
 
