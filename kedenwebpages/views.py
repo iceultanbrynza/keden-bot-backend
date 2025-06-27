@@ -122,9 +122,9 @@ async def UVEDModules(request:HttpRequest):
             "video": video,
             "doc": doc,
             "role": 'uved',
-        "message_id": message_id
+            "message_id": message_id
         }
-
+        print(message_id)
         # Добавить module_id, если есть
         module_id = MODULES.get(module)
         if module_id:
