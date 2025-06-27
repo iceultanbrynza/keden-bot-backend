@@ -16,7 +16,7 @@
         <form id="user-form">
             {% for key, value in fields.items %}
                 <label for="{{ key }}">{{ key }}</label>
-                <input type="text" name="{{ key }}" id="{{ key }}" value="{{ value }}" readonly>
+                <textarea class="auto-resize" name="{{ key }}" id="{{ key }}" readonly>{{ value }}</textarea>
                 <br>
             {% endfor %}
 
