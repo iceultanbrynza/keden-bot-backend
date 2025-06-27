@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from kedenbot.settings import URL
+from kedenbot.settings import URL, TELEGRAM_API
 
 import httpx
 import json, os
@@ -103,6 +103,7 @@ async def UVEDModules(request:HttpRequest):
         # ALL GET REQUEST MUST CONTAIN param type which can be equal to ПИ, ДТ и т.д.
         module = request.GET.get('module')
         sect = request.GET.get('sect')
+        message_id = request.GET.get('msg_id')
 
         uved_root = DATA.get("УВЭД", {})
         options = uved_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
@@ -120,7 +121,8 @@ async def UVEDModules(request:HttpRequest):
             "screens": screens,
             "video": video,
             "doc": doc,
-            "role": 'uved'
+            "role": 'uved',
+        "message_id": message_id
         }
 
         # Добавить module_id, если есть
@@ -131,16 +133,17 @@ async def UVEDModules(request:HttpRequest):
         return render(request, 'kedenwebpages/bugreport.html', context=context)
 
     if request.method == 'POST':
+        msg_id = request.GET.get("msg_id")
+        chat_id = request.GET.get("chat_id")
         body = request.body
         data = json.loads(body)
         print(len(data['fields']['ufCrm168Files']))
-        # entityTypeId = data['entityTypeId']
-        # text = data['fields']
 
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
                 json_data = response.json()
+                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={message_id}')
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={

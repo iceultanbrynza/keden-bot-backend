@@ -16,12 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
     const form = document.getElementById("user-form");
     const submitButton = form.querySelector("button[type=submit]");
     const loader = document.getElementById("loader-overlay");
     const module_id = window.appData?.module_id;
     const role = window.appData?.role;
+    const message_id = window.appData?.message_id;
+    const chat_id = tg.chatId;
     let url;
     const MAX_SIZE = 50 * 1024 * 1024;
 
@@ -128,9 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
         if(role == 'uved') {
-            url = "https://keden-bot-backend.onrender.com/kedenbot/uved"
+            url = `https://keden-bot-backend.onrender.com/kedenbot/uved?msg_id=${message_id}&chat_id=${chat_id}`
         } else{
-            url = "https://keden-bot-backend.onrender.com/kedenbot/udl"
+            url = `https://keden-bot-backend.onrender.com/kedenbot/udl?msg_id=${message_id}&chat_id=${chat_id}`
         }
         try {
             const response = await fetch(url, {
