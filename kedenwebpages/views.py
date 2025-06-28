@@ -126,7 +126,7 @@ async def UVEDModules(request:HttpRequest):
             "message_id": message_id,
             "chat_id": chat_id
         }
-        print(message_id)
+
         # Добавить module_id, если есть
         module_id = MODULES.get(module)
         if module_id:
@@ -158,6 +158,8 @@ async def UDLModules(request:HttpRequest):
         # ALL GET REQUEST MUST CONTAIN param type which can be equal to ПИ, ДТ и т.д.
         module = request.GET.get('module')
         sect = request.GET.get('sect')
+        message_id = request.GET.get('msg_id')
+        chat_id = request.GET.get('c_id')
 
         udl_root = DATA.get("УДЛ", {})
         options = udl_root.get(module, {}) # Поля/Скрины/Видео/Документ or Секции
@@ -175,7 +177,9 @@ async def UDLModules(request:HttpRequest):
             "screens": screens,
             "video": video,
             "doc": doc,
-            "role": 'udl'
+            "role": 'udl',
+            "message_id": message_id,
+            "chat_id": chat_id
         }
 
         # Добавить module_id, если есть
@@ -186,6 +190,8 @@ async def UDLModules(request:HttpRequest):
         return render(request, 'kedenwebpages/bugreport.html', context=context)
 
     if request.method == 'POST':
+        msg_id = request.GET.get("msg_id")
+        chat_id = request.GET.get("chat_id")
         body = request.body
         data = json.loads(body)
         print(len(data['fields']['ufCrm168Files']))
@@ -194,6 +200,7 @@ async def UDLModules(request:HttpRequest):
             try:
                 response = await client.post(f'{URL}/crm.item.add', json=data)
                 json_data = response.json()
+                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
