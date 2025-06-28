@@ -139,7 +139,11 @@ async def UVEDModules(request:HttpRequest):
         chat_id = request.GET.get("chat_id")
         body = request.body
         data = json.loads(body)
-        print(len(data['fields']['ufCrm168Files']))
+
+        # validation
+        resultText = data.get('fields', {}).get('ufCrm168Text')
+        if len(resultText) > 255:
+            return
 
         async with httpx.AsyncClient() as client:
             try:
@@ -194,7 +198,11 @@ async def UDLModules(request:HttpRequest):
         chat_id = request.GET.get("chat_id")
         body = request.body
         data = json.loads(body)
-        print(len(data['fields']['ufCrm168Files']))
+
+        # validation
+        resultText = data.get('fields', {}).get('ufCrm168Text')
+        if len(resultText) > 255:
+            return
 
         async with httpx.AsyncClient() as client:
             try:

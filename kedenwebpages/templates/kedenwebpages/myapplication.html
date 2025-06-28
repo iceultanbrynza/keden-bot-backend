@@ -33,7 +33,7 @@
 <script>
     function auto_resize(textarea){
         textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        textarea.style.height = textarea.scrollHeight + 3 + 'px' ;
     };
     document.addEventListener("DOMContentLoaded", ()=>{
         textareas = document.querySelectorAll('textarea.auto-resize');
