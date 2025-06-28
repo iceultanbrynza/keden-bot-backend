@@ -16,7 +16,7 @@
         <form id="user-form">
             {% for key, value in fields.items %}
                 <label for="{{ key }}">{{ key }}</label>
-                <textarea class="my-appl" name="{{ key }}" id="{{ key }}" readonly>{{ value }}</textarea>
+                <textarea class="auto-resize" name="{{ key }}" id="{{ key }}" readonly>{{ value }}</textarea>
                 <br>
             {% endfor %}
 
@@ -30,6 +30,17 @@
         <button type="submit" class="btn" disabled>Сохранить</button>
         </form>
     </div>
-
+<script>
+    function auto_resize(textarea){
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    };
+    document.addEventListener("DOMContentLoaded", ()=>{
+        textareas = document.querySelectorAll('textarea.auto-resize');
+        textareas.forEach(textarea => {
+            auto_resize(textarea);
+        });
+    });
+</script>
 </body>
 </html>
