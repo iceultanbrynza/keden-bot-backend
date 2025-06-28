@@ -64,6 +64,18 @@ textarea.auto-resize {
   border-radius: 10px;
 }
 
+textarea.my-appl {
+  width: 100%;
+  min-height: 40px;
+  max-height: 200px;
+  overflow:none;
+  resize:vertical;
+  border: 3px solid black;
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
 .btn {
   margin-top: 20px;
   background-color: #15cfe8;
