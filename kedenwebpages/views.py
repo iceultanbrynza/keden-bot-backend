@@ -277,7 +277,9 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
 
         files = item['ufCrm168Files']
         for file in files:
-            urls.append(file['urlMachine'])
+            url = file['urlMachine']
+            print(file['urlMachine'])
+            urls.append(url)
 
         context = {
             'fields': fields_for_context,
