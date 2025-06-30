@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         const user_id = tg.initDataUnsafe.user?.id;
         const urls = JSON.parse(document.getElementById('urls-data').textContent);
         alert(urls);
-        if (!Array.isArray(urls) || urls.length === 0) {
+        if (urls.length === 0) {
             alert("Нет файлов для отправки");
             return;
         }
