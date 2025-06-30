@@ -291,16 +291,18 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         chat_id = request.GET.get('chat_id')
         body = request.body
         urls = json.loads(body)
-        data = []
+        media = []
         for url in urls:
-            data.append({
+            media.append({
                 "type": "document",
                 "media": url
             })
+        media_json = json.dumps(media)
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.post(f'{TELEGRAM_API}/sendMediaGroup?chat_id={chat_id}&media={data}')
-
+                response = await client.post(f'{TELEGRAM_API}/sendMediaGroup?chat_id={chat_id}&media={media_json}')
+                json_data = response.json()
+                return JsonResponse(json_data)
             except httpx.RequestError as e:
                 return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
