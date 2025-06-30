@@ -16,25 +16,27 @@
 
     <form id="user-form">
       <label for="lastName">Фамилия</label>
-      <input type="text" id="lastName" name="lastName" required />
+      <input type="text" id="lastName" name="lastName" required maxlength="50"/>
 
       <label for="firstName">Имя</label>
-      <input type="text" id="firstName" name="firstName" required />
+      <input type="text" id="firstName" name="firstName" required maxlength="50"/>
 
       <label for="middleName">Отчество</label>
-      <input type="text" id="middleName" name="middleName" />
+      <input type="text" id="middleName" name="middleName" maxlength="50"/>
 
       <label for="phone">Номер телефона</label>
       <input type="tel"
       id="phone"
       name="phone"
       inputmode="numeric"
-      pattern="[0-9]*"
+      pattern="+[0-9]*"
       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-      required />
+      required
+      minlength="10"
+      maxlength="12"/>
 
       <label for="email">Электронная почта, с которой регистрировались</label>
-      <input type="email" id="email" name="email" required />
+      <input type="email" id="email" name="email" required maxlength="100" />
 
       <button type="submit" class="btn">{% if mode == 'edit' %}
                                             Обновить

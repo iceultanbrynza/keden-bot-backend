@@ -51,6 +51,9 @@ async def RegisterView(request: HttpRequest):
             fields = data.get('FIELDS')
             chat_id = fields.get('UF_CRM_CHAT_ID')
 
+            if not isValidLength(fields):
+                return
+
             async with httpx.AsyncClient() as client:
                 try:
                     response = await client.post(f'{URL}/crm.contact.add',
@@ -68,6 +71,21 @@ async def RegisterView(request: HttpRequest):
             return JsonResponse(content)
 
     return render(request, 'kedenwebpages/index.html', context=context)
+
+def isValidLength(fields:dict):
+    constraints = {
+        "LAST_NAME": 50,
+        "NAME": 50,
+        "SECOND_NAME": 50,
+        "PHONE": 12,
+        "EMAIL": 100
+    }
+    for key, value in constraints.items():
+        if not isinstance(value, str):
+            return False
+        if len(fields.get(key)) > value:
+            return False
+    return True
 
 @csrf_exempt
 async def fetchContactId(request: HttpRequest):

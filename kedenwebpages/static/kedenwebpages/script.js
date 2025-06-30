@@ -41,6 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const user_id = tg.initDataUnsafe.user?.id;
 
+    if(!isLengthValid(form)){
+      alert('Неправильный ввод: слишком мало/много символов');
+      return;
+    }
+
     let data = {
       FIELDS:{
           LAST_NAME: form.lastName.value,
@@ -110,5 +115,13 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error:", error);
       }
     };
-
+    function isLengthValid(form){
+      return (form.lastName.value.length<=50 &&
+        form.firstName.value.length<=50 &&
+        form.middleName.value.length<=50 &&
+        form.phone.value.length<=12 &&
+        form.phone.value.length>=10 &&
+        form.email.value.length<=100
+      );
+    };
 });
