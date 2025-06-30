@@ -60,8 +60,12 @@
         document.addEventListener("click", async function(event){
             if(event.target.classList.contains("btn")){
                 const urls = JSON.parse('{{ urls|safe|escapejs }}');
-                await send_urls_to_server(urls, user_id);
-                tg.close();
+                if(urls){
+                    await send_urls_to_server(urls, user_id);
+                    tg.close();
+                } else{
+                    alert('Вы не загружали файлы');
+                }
             }
         });
     });
