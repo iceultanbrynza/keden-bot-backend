@@ -30,10 +30,10 @@
         <button type="submit" class="btn">Посмотреть файлы загруженные мной</button>
         </form>
     </div>
+    <script id="urls-data" type="application/json">
+        {{ urls|safe }}
+    </script>
 <script>
-    window.appData = {
-      urls: "{{ urls|escapejs }}"
-    };
     function auto_resize(textarea){
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 3 + 'px' ;
@@ -52,7 +52,7 @@
             event.preventDefault();
 
             const user_id = tg.initDataUnsafe.user?.id;
-            const urls = JSON.parse(window.appData.urls);
+            const urls = JSON.parse(document.getElementById('urls-data').textContent);
             if(urls.length > 0){
                 const url = `https://keden-bot-backend.onrender.com/kedenbot/get_appl?chat_id=${user_id}`;
                 try {
