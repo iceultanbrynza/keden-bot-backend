@@ -160,7 +160,7 @@ async def UVEDModules(request:HttpRequest):
 
         # validation
         resultText = data.get('fields', {}).get('ufCrm168Text')
-        if len(resultText) > 255:
+        if len(resultText) > 2000:
             return JsonResponse({"error": "Text too long or missing"}, status=400)
 
         async with httpx.AsyncClient() as client:
@@ -218,9 +218,9 @@ async def UDLModules(request:HttpRequest):
         data = json.loads(body)
 
         # validation
-        resultText = data.get('fields', {}).get('ufCrm168Text')
-        if len(resultText) > 2000:
-            return JsonResponse({"error": "Text too long or missing"}, status=400)
+        # resultText = data.get('fields', {}).get('ufCrm168Text')
+        # if len(resultText) > 2000:
+        #     return JsonResponse({"error": "Text too long or missing"}, status=400)
 
         async with httpx.AsyncClient() as client:
             try:
