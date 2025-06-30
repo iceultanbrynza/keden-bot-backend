@@ -27,7 +27,7 @@
             {% endfor %}
 
 
-        <button type="button" class="btn">Посмотреть файлы загруженные мной</button>
+        <button type="submit" class="btn">Посмотреть файлы загруженные мной</button>
         </form>
     </div>
 <script>
@@ -41,34 +41,36 @@
 
     document.addEventListener("DOMContentLoaded", ()=>{
         const tg = window.Telegram.WebApp;
+        const form = document.getElementById('user-form')
         tg.ready();
         textareas = document.querySelectorAll('textarea.auto-resize');
         textareas.forEach(textarea => {
             auto_resize(textarea);
         });
 
-        document.addEventListener("click", async function(event){
-            if(event.target.classList.contains("btn")){
-                const user_id = tg.initDataUnsafe.user?.id;
-                const urls = JSON.parse(window.appData.urls);
-                if(urls.length > 0){
-                    const url = `https://keden-bot-backend.onrender.com/kedenbot/get_appl?chat_id=${user_id}`;
-                    try {
-                        const response = await fetch(url, {
-                            method: "POST",
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify(urls)
-                        });
+        form.addEventListener("submit", async function(event){
+            e.preventDefault();
 
-                    } catch (error) {
-                        alert('Мы не смогли сделать запрос на отправку Ваших файлов. Попробуйте еще раз.')
-                    }
-                    tg.close();
-                } else{
-                    alert('Вы не загружали файлы');
-                    return;
+            const user_id = tg.initDataUnsafe.user?.id;
+            const urls = JSON.parse(window.appData.urls);
+            if(urls.length > 0){
+                const url = `https://keden-bot-backend.onrender.com/kedenbot/get_appl?chat_id=${user_id}`;
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(urls)
+                    });
+
+                } catch (error) {
+                    alert('Мы не смогли сделать запрос на отправку Ваших файлов. Попробуйте еще раз.')
                 }
+                tg.close();
+            } else{
+                alert('Вы не загружали файлы');
+                return;
             }
+
         });
     });
 
