@@ -63,13 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 ufCrm168Text: resultText,
                 ufCrm168FioFromTg: user_name,
                 ufCrm168UserChatId: user_id,
-                contactId: contact_id
+                contactId: contact_id,
+                parentId1544: module_id
             }
         };
-
-        if(module_id!=undefined) {
-            data.fields.ufCrm168SelectModule = module_id;
-        }
 
         const fileInputs = [
             {
