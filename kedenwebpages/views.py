@@ -135,6 +135,8 @@ async def UVEDModules(request:HttpRequest):
 
         doc = options.get(sect).get('Документ') if sect else options.get('Документ')
 
+        module_id = MODULES.get(module)
+
         context = {
             "field_names": fields or [],
             "screens": screens,
@@ -142,13 +144,9 @@ async def UVEDModules(request:HttpRequest):
             "doc": doc,
             "role": 'uved',
             "message_id": message_id,
-            "chat_id": chat_id
+            "chat_id": chat_id,
+            "module_id": int(module_id)
         }
-
-        # Добавить module_id, если есть
-        module_id = MODULES.get(module)
-        if module_id:
-            context["module_id"] = module_id
 
         return render(request, 'kedenwebpages/bugreport.html', context=context)
 
@@ -194,6 +192,8 @@ async def UDLModules(request:HttpRequest):
 
         doc = options.get(sect, {}).get('Документ') if sect else options.get('Документ')
 
+        module_id = MODULES.get(module)
+
         context = {
             "field_names": fields or [],
             "screens": screens,
@@ -201,13 +201,9 @@ async def UDLModules(request:HttpRequest):
             "doc": doc,
             "role": 'udl',
             "message_id": message_id,
-            "chat_id": chat_id
+            "chat_id": chat_id,
+            "module_id": module_id
         }
-
-        # Добавить module_id, если есть
-        module_id = MODULES.get(module)
-        if module_id:
-            context["module_id"] = module_id
 
         return render(request, 'kedenwebpages/bugreport.html', context=context)
 
@@ -218,9 +214,9 @@ async def UDLModules(request:HttpRequest):
         data = json.loads(body)
 
         # validation
-        # resultText = data.get('fields', {}).get('ufCrm168Text')
-        # if len(resultText) > 2000:
-        #     return JsonResponse({"error": "Text too long or missing"}, status=400)
+        resultText = data.get('fields', {}).get('ufCrm168Text')
+        if len(resultText) > 2000:
+            return JsonResponse({"error": "Text too long or missing"}, status=400)
 
         async with httpx.AsyncClient() as client:
             try:
@@ -286,7 +282,6 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
             'files': files_for_context,
             'urls': urls
         }
-        print(urls)
 
         return render(request, 'kedenwebpages/myapplication.html', context=context)
 
@@ -302,8 +297,6 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
                                                 "chat_id": chat_id,
                                                 "media": media
                                             })
-                print(response.status_code)
-                print(response.text)
                 json_data = response.json()
                 return JsonResponse(json_data)
             except httpx.RequestError as e:
