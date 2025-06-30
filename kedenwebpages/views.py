@@ -284,6 +284,7 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
             'files': files_for_context,
             'urls': urls
         }
+        print(urls)
 
         return render(request, 'kedenwebpages/myapplication.html', context=context)
 
