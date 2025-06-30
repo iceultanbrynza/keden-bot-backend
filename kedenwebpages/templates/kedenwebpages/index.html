@@ -30,7 +30,7 @@
       name="phone"
       inputmode="numeric"
       pattern="^\+?[0-9]*"
-      oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+      oninput="this.value = this.value.replace(/(?!^\+)[^\d]/g, '')"
       required
       minlength="10"
       maxlength="12"
