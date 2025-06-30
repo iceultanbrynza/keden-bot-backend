@@ -30,9 +30,7 @@
         <button type="submit" class="btn">Посмотреть файлы загруженные мной</button>
         </form>
     </div>
-    <script id="urls-data" type="application/json">
-        {{ urls|safe }}
-    </script>
+    {{ urls|json_script:"urls-data" }}
     <script src="{% static 'kedenwebpages/script_my_appls.js' %}"></script>
 </body>
 </html>
