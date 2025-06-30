@@ -32,6 +32,9 @@
     </div>
 <script>
     const tg = window.Telegram.WebApp;
+    window.appData = {
+      urls: "{{ urls|escapejs }}"
+    };
     tg.ready();
     function auto_resize(textarea){
         textarea.style.height = 'auto';
@@ -51,7 +54,6 @@
         }
     };
     document.addEventListener("DOMContentLoaded", ()=>{
-        const user_id = tg.initDataUnsafe.user?.id;
         textareas = document.querySelectorAll('textarea.auto-resize');
         textareas.forEach(textarea => {
             auto_resize(textarea);
@@ -59,7 +61,8 @@
 
         document.addEventListener("click", async function(event){
             if(event.target.classList.contains("btn")){
-                const urls = JSON.parse('{{ urls|safe|escapejs }}');
+                const user_id = tg.initDataUnsafe.user?.id;
+                const urls = JSON.parse(window.appData.urls);
                 if(urls){
                     await send_urls_to_server(urls, user_id);
                     tg.close();
