@@ -31,6 +31,8 @@
         </form>
     </div>
 <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
     function auto_resize(textarea){
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 3 + 'px' ;
@@ -59,6 +61,7 @@
             if(event.target.classList.contains("btn")){
                 const urls = JSON.parse('{{ urls|safe|escapejs }}');
                 await send_urls_to_server(urls, user_id);
+                tg.close();
             }
         });
     });
