@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("lastName").value = contact.LAST_NAME || '';
       document.getElementById("firstName").value = contact.NAME || '';
       document.getElementById("middleName").value = contact.SECOND_NAME || '';
-      document.getElementById("phone").value = contact.PHONE?.[0]?.VALUE || '';
+      document.getElementById("phone").value = contact.PHONE?.[0]?.VALUE || '+7';
       document.getElementById("email").value = contact.EMAIL?.[0]?.VALUE || '';
     })();
   } else {
