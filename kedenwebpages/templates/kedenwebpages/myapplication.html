@@ -27,7 +27,7 @@
             {% endfor %}
 
 
-        <button type="submit" class="btn" disabled>Сохранить</button>
+        <button type="button" class="btn" disabled>Посмотреть файлы загруженные мной</button>
         </form>
     </div>
 <script>
@@ -35,12 +35,34 @@
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 3 + 'px' ;
     };
+    async function send_urls_to_server(urls, user_id){
+        const url = `https://keden-bot-backend.onrender.com/kedenbot/get_appl?chat_id=${user_id}`;
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(urls)
+            });
+
+        } catch (error) {
+            alert('Мы не смогли сделать запрос на отправку Ваших файлов. Попробуйте еще раз.')
+        }
+    };
     document.addEventListener("DOMContentLoaded", ()=>{
+        const user_id = tg.initDataUnsafe.user?.id;
         textareas = document.querySelectorAll('textarea.auto-resize');
         textareas.forEach(textarea => {
             auto_resize(textarea);
         });
+
+        document.addEventListener("click", async function(event){
+            if(event.target.classList.contains("btn")){
+                const urls = JSON.parse('{{ urls|safe|escapejs }}');
+                await send_urls_to_server(urls, user_id);
+            }
+        });
     });
+
 </script>
 </body>
 </html>

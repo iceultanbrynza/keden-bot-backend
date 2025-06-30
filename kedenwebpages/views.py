@@ -234,7 +234,7 @@ async def UDLModules(request:HttpRequest):
                 })
 
 @csrf_exempt
-async def return_filled_application_form(request:HttpRequest, id:int):
+async def return_filled_application_form(request:HttpRequest, id:int=None):
     # передавай параметр id
     if request.method == 'GET':
         async with httpx.AsyncClient() as client:
@@ -253,8 +253,10 @@ async def return_filled_application_form(request:HttpRequest, id:int):
                 if not items:
                     return
 
+        # names for fileds
         fields_for_context: dict[str, str] = {}
         files_for_context: list[str] = []
+        urls: list[str] = []
 
         item = items[0]
         text = item['ufCrm168Text']
@@ -273,9 +275,33 @@ async def return_filled_application_form(request:HttpRequest, id:int):
 
             fields_for_context[key] = value
 
+        files = item['ufCrm168Files']
+        for file in files:
+            urls.append(file['urlMachine'])
+
         context = {
             'fields': fields_for_context,
-            'files': files_for_context
+            'files': files_for_context,
+            'urls': urls
         }
 
         return render(request, 'kedenwebpages/myapplication.html', context=context)
+
+    if request.method == 'POST':
+        chat_id = request.GET.get('chat_id')
+        body = request.body
+        urls = json.loads(body)
+        data = []
+        for url in urls:
+            data.append({
+                "type": "document",
+                "media": url
+            })
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(f'{TELEGRAM_API}/sendMediaGroup?chat_id={chat_id}&media={data}')
+
+            except httpx.RequestError as e:
+                return render(request, 'kedenwebpages/error.html', context={
+                    'status': 500
+                })
