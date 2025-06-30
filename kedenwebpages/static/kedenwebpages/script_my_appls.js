@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const tg = window.Telegram.WebApp;
     const form = document.getElementById('user-form')
     tg.ready();
-    textareas = document.querySelectorAll('textarea.auto-resize');
+    const textareas = document.querySelectorAll('textarea.auto-resize');
     textareas.forEach(textarea => {
         auto_resize(textarea);
     });
