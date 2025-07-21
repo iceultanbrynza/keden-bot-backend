@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let contactId;
   const mode = window.appData.mode;
   const form = document.getElementById("user-form");
-  const URL_BASE = "https://keden-bot-backend.onrender.com";
+  const URL_BASE = window.appData?.django_url;
 
   if (mode === 'edit') {
     (async () => {

@@ -3,7 +3,7 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
-from kedenbot.settings import URL, TELEGRAM_API
+from kedenbot.settings import URL, TELEGRAM_API, DJANGO_URL
 
 import httpx
 import json, os
@@ -58,7 +58,7 @@ async def sendPostToCRM(url: str, data: dict, headers: dict, request: HttpReques
 @require_GET
 async def RestrationPage(request: HttpRequest):
     mode = request.GET.get('mode', 'register')
-    return render(request, 'kedenwebpages/index.html', context={'mode': mode})
+    return render(request, 'kedenwebpages/index.html', context={'mode': mode, 'django_url': DJANGO_URL})
 
 @csrf_exempt
 async def RegisterView(request: HttpRequest):
@@ -147,7 +147,8 @@ async def UVEDModules(request:HttpRequest):
             "role": 'uved',
             "message_id": message_id,
             "chat_id": chat_id,
-            "module_id": int(module_id)
+            "module_id": int(module_id),
+            "django_url": DJANGO_URL
         }
 
         return render(request, 'kedenwebpages/bugreport.html', context=context)
@@ -204,7 +205,8 @@ async def UDLModules(request:HttpRequest):
             "role": 'udl',
             "message_id": message_id,
             "chat_id": chat_id,
-            "module_id": module_id
+            "module_id": module_id,
+            "django_url": DJANGO_URL
         }
 
         return render(request, 'kedenwebpages/bugreport.html', context=context)
@@ -282,7 +284,8 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         context = {
             'fields': fields_for_context,
             'files': files_for_context,
-            'urls': urls
+            'urls': urls,
+            "django_url": DJANGO_URL
         }
 
         return render(request, 'kedenwebpages/myapplication.html', context=context)

@@ -130,6 +130,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
 
 URL = os.getenv("BITRIX_API")
 TELEGRAM_API = os.getenv("TELEGRAM_API")
+DJANGO_URL = os.getenv("DJANGO_URL")
 REDIS_HOST = os.environ.get('REDIS_PORT', "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")

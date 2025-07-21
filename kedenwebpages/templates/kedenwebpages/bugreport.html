@@ -56,7 +56,8 @@
       module_id: "{{ module_id|escapejs }}",
       role: "{{ role|escapejs }}",
       message_id: "{{ message_id|escapejs }}",
-      chat_id: "{{ chat_id|escapejs }}"
+      chat_id: "{{ chat_id|escapejs }}",
+      django_url: "{{ django_url|escapejs }}"
     };
   </script>
   <script src="{% static 'kedenwebpages/scriptuved.js' %}"></script>

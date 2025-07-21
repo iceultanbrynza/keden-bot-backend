@@ -20,13 +20,6 @@
                 <br>
             {% endfor %}
 
-            {% for key in files %}
-                <label for="{{ key }}">{{ key }}</label>
-                <input type="text" name="{{ key }}" id="{{ key }}" value="Ваш файл загружен" readonly>
-                <br>
-            {% endfor %}
-
-
         <button type="submit" class="btn">Посмотреть файлы загруженные мной</button>
         </form>
     </div>

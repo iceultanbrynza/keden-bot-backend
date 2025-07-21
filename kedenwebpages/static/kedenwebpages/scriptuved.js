@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const chat_id = window.appData?.chat_id;
     let url;
     const MAX_SIZE = 50 * 1024 * 1024;
-    const URL_BASE = "https://keden-bot-backend.onrender.com";
+    const URL_BASE = window.appData?.django_url;
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const form = document.getElementById('user-form')
     tg.ready();
     const textareas = document.querySelectorAll('textarea.auto-resize');
-    const URL_BASE = "https://keden-bot-backend.onrender.com";
+    const URL_BASE = window.appData?.django_url;
     textareas.forEach(textarea => {
         auto_resize(textarea);
     });
