@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const form = document.getElementById('user-form')
     tg.ready();
     const textareas = document.querySelectorAll('textarea.auto-resize');
+    const URL_BASE = "https://keden-bot-backend.onrender.com";
     textareas.forEach(textarea => {
         auto_resize(textarea);
     });
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             alert("Нет файлов для отправки");
             return;
         }
-        const url = `https://keden-bot-backend.onrender.com/kedenbot/get_appl?chat_id=${user_id}`;
+        const url = `${URL_BASE}/kedenbot/get_appl?chat_id=${user_id}`;
         try {
             const response = await fetch(url, {
                 method: "POST",

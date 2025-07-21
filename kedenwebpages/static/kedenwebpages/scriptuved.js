@@ -25,11 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const chat_id = window.appData?.chat_id;
     let url;
     const MAX_SIZE = 50 * 1024 * 1024;
+    const URL_BASE = "https://keden-bot-backend.onrender.com";
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
         const formData = new FormData(form);
-        if(await isFormEmpty(formData)){
+        if (await isFormEmpty(formData)) {
             alert('Заполните поля, чтобы мы могли понять Вашу проблему');
             return;
         }
@@ -46,10 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // validation. Entry cannot contain more than 255 symbols
         for (const [key, value] of formData.entries()) {
-            if(value.length > 255){
+            if (value.length > 255) {
                 alert('Ваше сообщение может содержать не более 255 символов');
                 const input = document.querySelector(`[name="${key}"]`);
-                if(input) {
+                if (input) {
                     input.value = '';
                 }
                 return;
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let data = {
             entityTypeId: 1444,
-            fields:{
+            fields: {
                 ufCrm168Text: resultText,
                 ufCrm168FioFromTg: user_name,
                 ufCrm168UserChatId: user_id,
@@ -104,10 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
         data.fields.ufCrm168Files = [];
         let overall_size = 0;
 
-        for(const fileInput of fileInputs){
+        for (const fileInput of fileInputs) {
             const input = document.getElementById(fileInput.id);
             if (!input || !input.files) continue;
-            if(input.files.length>fileInput.restrection){
+            if (input.files.length > fileInput.restrection) {
                 alert(`Можно загрузить не более ${fileInput.restrection} файлов`);
                 input.value = ''; // сбрасываем выбор
                 loader.style.display = "none";
@@ -116,10 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            if(input.files && input.files.length > 0){
-                for(const file of input.files){
+            if (input.files && input.files.length > 0) {
+                for (const file of input.files) {
                     overall_size += file.size;
-                    if(overall_size > MAX_SIZE){
+                    if (overall_size > MAX_SIZE) {
                         alert(`Можно загрузить не более ${MAX_SIZE} файлов`);
                         input.value = ''; // сбрасываем выбор
                         loader.style.display = "none";
@@ -134,15 +135,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         }
-        if(role == 'uved') {
-            url = `https://keden-bot-backend.onrender.com/kedenbot/uved?msg_id=${message_id}&chat_id=${chat_id}`
-        } else{
-            url = `https://keden-bot-backend.onrender.com/kedenbot/udl?msg_id=${message_id}&chat_id=${chat_id}`
+        if (role == 'uved') {
+            url = `${URL_BASE}/kedenbot/uved?msg_id=${message_id}&chat_id=${chat_id}`
+        } else {
+            url = `${URL_BASE}/kedenbot/udl?msg_id=${message_id}&chat_id=${chat_id}`
         }
         try {
             const response = await fetch(url, {
                 method: "POST",
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
                 body: JSON.stringify(data)
             });
 
@@ -152,21 +153,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tg.close()
     });
-    async function getContact(){
+
+    async function getContact() {
         const user_id = tg.initDataUnsafe.user?.id;
-        const url = new URL("https://keden-bot-backend.onrender.com/kedenbot/contactid");
+        const url = new URL(`${URL_BASE}/kedenbot/contactid`);
         url.searchParams.set("UF_CRM_CHAT_ID", user_id);
 
         try {
             const response = await fetch(url, {
                 method: "GET",
-                headers: { 'Content-Type': 'application/json' }
+                headers: {'Content-Type': 'application/json'}
             });
 
             const result = await response.json();
-            if(Array.isArray(result.result)){
+            if (Array.isArray(result.result)) {
                 contact = result.result[0];
-            } else{
+            } else {
                 contact = result.result;
             }
             return contact.ID;
@@ -174,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error:", error);
         }
     };
+
     async function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -185,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.readAsDataURL(file);
         });
     };
+
     async function generateFilename(prefix = "file", extension = "png") {
         const now = new Date();
         const y = now.getFullYear();
@@ -194,11 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const min = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
         return `${prefix}_${y}${m}${d}_${h}${min}${s}.${extension}`;
-      };
-    async function isFormEmpty(formData){
-        for(const [_, value] of formData.entries()){
-            if(!(value instanceof File)){
-                if(typeof value === 'string' && value.trim() !== ''){
+    };
+
+    async function isFormEmpty(formData) {
+        for (const [_, value] of formData.entries()) {
+            if (!(value instanceof File)) {
+                if (typeof value === 'string' && value.trim() !== '') {
                     return false;
                 }
             }

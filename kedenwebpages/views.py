@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+
 from kedenbot.settings import URL, TELEGRAM_API
 
 import httpx
@@ -17,75 +19,75 @@ with open(json_path, 'r', encoding='utf-8') as f:
 with open(json_path2, 'r', encoding='utf-8') as f:
     MODULES = json.load(f)
 
-# Create your views here.
+CONSTRAINTS = {
+    "LAST_NAME": 50,
+    "NAME": 50,
+    "SECOND_NAME": 50,
+    "PHONE": 12,
+    "EMAIL": 100
+}
+
+def isValidLength(fields:dict):
+    for key, constraint in CONSTRAINTS.items():
+        value = fields.get(key)
+
+        if isinstance(value, list):
+            for item in value:
+                val = item.get("VALUE")
+
+                if len(val) > constraint:
+                    return False
+
+        elif len(value) > constraint:
+            return False
+
+    return True
+
+async def sendPostToCRM(url: str, data: dict, headers: dict, request: HttpRequest):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=data, headers=headers)
+            response.raise_for_status()
+            return response
+    except httpx.RequestError:
+        return render(request, 'kedenwebpages/error.html', context={'status': 500})
+    except httpx.HTTPStatusError as e:
+        return render(request, 'kedenwebpages/error.html', context={'status': e.response.status_code})
+
+@csrf_exempt
+@require_GET
+async def RestrationPage(request: HttpRequest):
+    mode = request.GET.get('mode', 'register')
+    return render(request, 'kedenwebpages/index.html', context={'mode': mode})
+
 @csrf_exempt
 async def RegisterView(request: HttpRequest):
     mode = request.GET.get('mode', 'register')
-    context = {'mode': mode}
 
-    if request.method == 'POST':
-        # mode = request.GET.get('mode', 'register')
-        if mode == 'edit':
-            body = request.body
-            data = json.loads(body)
-            headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-
-            async with httpx.AsyncClient() as client:
-                response = await client.post(f'{URL}/crm.contact.update',
-                                            json=data, headers=headers)
-
-            return JsonResponse({'result': 'updated'})
-
-        else:
-            headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-
-            body = request.body
-            data = json.loads(body)
-
-            fields = data.get('FIELDS')
-            chat_id = fields.get('UF_CRM_CHAT_ID')
-
-            if not isValidLength(fields):
-                return
-
-            async with httpx.AsyncClient() as client:
-                try:
-                    response = await client.post(f'{URL}/crm.contact.add',
-                                                json=data, headers=headers)
-                except httpx.RequestError as e:
-                    return render(request, 'kedenwebpages/error.html', context={
-                        'status': 500
-                    })
-
-            await redis_client.set(str(chat_id), 1, ex=3600)
-
-            content = {
-                'result': 'ok'
-            }
-            return JsonResponse(content)
-
-    return render(request, 'kedenwebpages/index.html', context=context)
-
-def isValidLength(fields:dict):
-    constraints = {
-        "LAST_NAME": 50,
-        "NAME": 50,
-        "SECOND_NAME": 50,
-        "PHONE": 12,
-        "EMAIL": 100
+    body = request.body
+    data = json.loads(body)
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
     }
-    for key, value in constraints.items():
-        if not isinstance(value, str):
-            return False
-        if len(fields.get(key)) > value:
-            return False
-    return True
+
+    if mode == 'edit':
+        await sendPostToCRM(f'{URL}/crm.contact.update', data, headers, request)
+        return HttpResponse(status=200)
+
+    fields = data.get('FIELDS')
+    chat_id = fields.get('UF_CRM_CHAT_ID')
+
+    if not isValidLength(fields):
+        return render(request, 'kedenwebpages/error.html', context={
+            'status': 400
+        })
+
+    await sendPostToCRM(f'{URL}/crm.contact.add', data, headers, request)
+
+    await redis_client.set(str(chat_id), 1, ex=3600)
+
+    return HttpResponse(status=200)
 
 @csrf_exempt
 async def fetchContactId(request: HttpRequest):
