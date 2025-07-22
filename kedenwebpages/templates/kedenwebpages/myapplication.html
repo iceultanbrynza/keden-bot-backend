@@ -25,5 +25,10 @@
     </div>
     {{ urls|json_script:"urls-data" }}
     <script src="{% static 'kedenwebpages/script_my_appls.js' %}"></script>
+    <script>
+        window.appData = {
+          django_url: "{{ django_url|escapejs }}"
+        };
+    </script>
 </body>
 </html>
