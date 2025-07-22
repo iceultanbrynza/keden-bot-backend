@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,8 +9,6 @@ from django.views.decorators.http import require_GET
 from kedenbot.settings import URL, TELEGRAM_API, DJANGO_URL
 
 import httpx
-import json, os
-from pathlib import Path
 
 from .redis_async import redis_client
 
@@ -27,6 +28,7 @@ CONSTRAINTS = {
     "EMAIL": 100
 }
 
+
 def isValidLength(fields:dict):
     for key, constraint in CONSTRAINTS.items():
         value = fields.get(key)
@@ -43,7 +45,8 @@ def isValidLength(fields:dict):
 
     return True
 
-async def sendPostToCRM(url: str, data: dict, headers: dict, request: HttpRequest):
+
+async def sendPostToCRM(url: str, request: HttpRequest, data: dict = None, headers: dict = None):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=data, headers=headers)
@@ -54,11 +57,13 @@ async def sendPostToCRM(url: str, data: dict, headers: dict, request: HttpReques
     except httpx.HTTPStatusError as e:
         return render(request, 'kedenwebpages/error.html', context={'status': e.response.status_code})
 
+
 @csrf_exempt
 @require_GET
 async def RestrationPage(request: HttpRequest):
     mode = request.GET.get('mode', 'register')
     return render(request, 'kedenwebpages/index.html', context={'mode': mode, 'django_url': DJANGO_URL})
+
 
 @csrf_exempt
 async def RegisterView(request: HttpRequest):
@@ -72,7 +77,7 @@ async def RegisterView(request: HttpRequest):
     }
 
     if mode == 'edit':
-        await sendPostToCRM(f'{URL}/crm.contact.update', data, headers, request)
+        await sendPostToCRM(f'{URL}/crm.contact.update', request, data, headers)
         return HttpResponse(status=200)
 
     fields = data.get('FIELDS')
@@ -83,11 +88,12 @@ async def RegisterView(request: HttpRequest):
             'status': 400
         })
 
-    await sendPostToCRM(f'{URL}/crm.contact.add', data, headers, request)
+    await sendPostToCRM(f'{URL}/crm.contact.add', request, data, headers)
 
     await redis_client.set(str(chat_id), 1, ex=3600)
 
     return HttpResponse(status=200)
+
 
 @csrf_exempt
 async def fetchContactId(request: HttpRequest):
@@ -113,6 +119,7 @@ async def fetchContactId(request: HttpRequest):
                 return render(request, 'kedenwebpages/error.html', context={
                     'status': 500
                 })
+
 
 @csrf_exempt
 async def UVEDModules(request:HttpRequest):
@@ -175,6 +182,7 @@ async def UVEDModules(request:HttpRequest):
                     'status': 500
                 })
 
+
 @csrf_exempt
 async def UDLModules(request:HttpRequest):
     if request.method == 'GET':
@@ -233,48 +241,39 @@ async def UDLModules(request:HttpRequest):
                     'status': 500
                 })
 
+
 @csrf_exempt
 async def return_filled_application_form(request:HttpRequest, id:int=None):
     # передавай параметр id
     if request.method == 'GET':
-        async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(f'{URL}/crm.item.list.json?entityTypeId=1444&filter[id]={id}')
-
-            except httpx.RequestError as e:
-                return render(request, 'kedenwebpages/error.html', context={
-                    'status': 500
-                })
-
-            else:
-                json_data = response.json()
-                result = json_data.get('result', {})
-                items = result.get('items', [])
-                if not items:
-                    return
-
         # names for fileds
         fields_for_context: dict[str, str] = {}
-        files_for_context: list[str] = []
         urls: list[str] = []
 
+        # возвращает список с одной задачей (item)
+        response = await sendPostToCRM(url=f'{URL}/crm.item.list.json?entityTypeId=1444&filter[id]={id}', request=request)
+        json_data = response.json()
+        result = json_data.get('result', {})
+        items = result.get('items', [])
+        if not items:
+            return
         item = items[0]
+        # в поле ufCrm168Text хранится ответ тех.поддержки, который нужно разпарсить
         text = item['ufCrm168Text']
-
+        
         fields = text.split('\n')
-
         for field in fields:
             try:
                 key, value = field.split(': ', 1)
             except ValueError:
                 continue  # строка без ': ', пропускаем
-
+            # файлы не показываются в веб-страничке, отсылаются отдельно через телеграм (при условии что пользователь нажал на кнопку)
             if 'Скрин' in key or 'Видео' in key or 'Фото' in key or 'Документ' in key or 'ПДФ' in key:
-                files_for_context.append(key)
                 continue
 
             fields_for_context[key] = value
 
+        # ссылки на файлы
         files = item['ufCrm168Files']
         for file in files:
             url = file['urlMachine']
@@ -283,7 +282,6 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
 
         context = {
             'fields': fields_for_context,
-            'files': files_for_context,
             'urls': urls,
             "django_url": DJANGO_URL
         }
