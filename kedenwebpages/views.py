@@ -177,7 +177,7 @@ async def UVEDModules(request:HttpRequest):
 
         response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)
         json_data = response.json()
-        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
+        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}', request)
         return JsonResponse(json_data)
 
 @csrf_exempt
@@ -229,7 +229,7 @@ async def UDLModules(request:HttpRequest):
 
         response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)
         json_data = response.json()
-        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
+        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}', request)
         return JsonResponse(json_data)
 
 
@@ -284,6 +284,7 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         urls = json.loads(body)
         media = [{"type": "document", "media": url} for url in urls]
         response = await sendPostToTelegram(f'{TELEGRAM_API}/sendMediaGroup',
+                                            request,
                                             data={
                                                 "chat_id": chat_id,
                                                 "media": media
