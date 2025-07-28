@@ -9,19 +9,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
     tg.ready();
     const textareas = document.querySelectorAll('textarea.auto-resize');
     const URL_BASE = window.appData?.django_url;
+    
     textareas.forEach(textarea => {
         auto_resize(textarea);
     });
 
     form.addEventListener("submit", async function(event){
+
         event.preventDefault();
 
         const user_id = tg.initDataUnsafe.user?.id;
+
         const urls = JSON.parse(document.getElementById('urls-data').textContent);
         if (urls.length === 0) {
             alert("Нет файлов для отправки");
             return;
         }
+
         const url = `${URL_BASE}/kedenbot/get_appl?chat_id=${user_id}`;
         try {
             const response = await fetch(url, {
@@ -33,6 +37,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         } catch (error) {
             alert('Мы не смогли сделать запрос на отправку Ваших файлов. Попробуйте еще раз.')
         }
+
         tg.close();
     });
 });

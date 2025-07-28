@@ -1,14 +1,14 @@
 import json
 from pathlib import Path
 
+import httpx
+
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from kedenbot.settings import URL, TELEGRAM_API, DJANGO_URL
-
-import httpx
 
 from .redis_async import redis_client
 
@@ -56,6 +56,10 @@ async def sendPostToCRM(url: str, request: HttpRequest, data: dict = None, heade
         return render(request, 'kedenwebpages/error.html', context={'status': 500})
     except httpx.HTTPStatusError as e:
         return render(request, 'kedenwebpages/error.html', context={'status': e.response.status_code})
+
+
+async def sendPostToTelegram(url: str, request: HttpRequest, data: dict = None, headers: dict = None):
+    return await sendPostToCRM(url, request, data, headers)
 
 
 @csrf_exempt
@@ -171,17 +175,10 @@ async def UVEDModules(request:HttpRequest):
         if len(resultText) > 2000:
             return JsonResponse({"error": "Text too long or missing"}, status=400)
 
-        async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(f'{URL}/crm.item.add', json=data)
-                json_data = response.json()
-                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
-                return JsonResponse(json_data)
-            except httpx.RequestError as e:
-                return render(request, 'kedenwebpages/error.html', context={
-                    'status': 500
-                })
-
+        response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)
+        json_data = response.json()
+        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
+        return JsonResponse(json_data)
 
 @csrf_exempt
 async def UDLModules(request:HttpRequest):
@@ -230,16 +227,10 @@ async def UDLModules(request:HttpRequest):
         if len(resultText) > 2000:
             return JsonResponse({"error": "Text too long or missing"}, status=400)
 
-        async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(f'{URL}/crm.item.add', json=data)
-                json_data = response.json()
-                response = await client.get(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
-                return JsonResponse(json_data)
-            except httpx.RequestError as e:
-                return render(request, 'kedenwebpages/error.html', context={
-                    'status': 500
-                })
+        response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)
+        json_data = response.json()
+        response = await sendPostToTelegram(f'{TELEGRAM_API}/deleteMessage?chat_id={chat_id}&message_id={msg_id}')
+        return JsonResponse(json_data)
 
 
 @csrf_exempt
@@ -260,7 +251,7 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         item = items[0]
         # в поле ufCrm168Text хранится ответ тех.поддержки, который нужно разпарсить
         text = item['ufCrm168Text']
-        
+
         fields = text.split('\n')
         for field in fields:
             try:
@@ -277,7 +268,6 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         files = item['ufCrm168Files']
         for file in files:
             url = file['urlMachine']
-            print(file['urlMachine'])
             urls.append(url)
 
         context = {
@@ -293,16 +283,11 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         body = request.body
         urls = json.loads(body)
         media = [{"type": "document", "media": url} for url in urls]
-        async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(f'{TELEGRAM_API}/sendMediaGroup',
-                                            json={
+        response = await sendPostToTelegram(f'{TELEGRAM_API}/sendMediaGroup',
+                                            data={
                                                 "chat_id": chat_id,
                                                 "media": media
                                             })
-                json_data = response.json()
-                return JsonResponse(json_data)
-            except httpx.RequestError as e:
-                return render(request, 'kedenwebpages/error.html', context={
-                    'status': 500
-                })
+
+        json_data = response.json()
+        return JsonResponse(json_data)
