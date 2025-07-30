@@ -289,6 +289,4 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
                                                 "chat_id": chat_id,
                                                 "media": media
                                             })
-
-        json_data = response.json()
-        return JsonResponse(json_data)
+        return JsonResponse(response.status_code)

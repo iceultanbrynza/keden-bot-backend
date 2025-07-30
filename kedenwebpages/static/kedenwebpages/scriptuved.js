@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const fileInputs = [
             {
                 id: "screen",
-                prefix: "screen",
+                prefix: "file",
                 restrection: 5
             },
             {
