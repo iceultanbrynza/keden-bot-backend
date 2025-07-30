@@ -283,7 +283,7 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         body = request.body
         urls = json.loads(body)
         media = [{"type": "document", "media": url} for url in urls]
-        if len(url) == 1:
+        if len(urls) == 1:
             response = await sendPostToTelegram(f'{TELEGRAM_API}/sendDocument',
                                             request,
                                             data={
