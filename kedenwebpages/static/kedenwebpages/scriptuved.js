@@ -73,32 +73,27 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 id: "screen",
                 prefix: "screen",
-                restrection: 5,
-                extenstion: "png"
+                restrection: 5
             },
             {
                 id: "video",
                 prefix: "video",
-                restrection: 1,
-                extenstion: "mp4"
+                restrection: 1
             },
             {
                 id: "screen-variable",
                 prefix: "screen-var",
-                restrection: 2,
-                extenstion: "png"
+                restrection: 2
             },
             {
                 id: "video-variable",
                 prefix: "video-var",
-                restrection: 1,
-                extenstion: "mp4"
+                restrection: 1
             },
             {
                 id: "doc",
                 prefix: "doc",
-                restrection: 1,
-                extenstion: "pdf"
+                restrection: 1
             }
         ];
 
@@ -128,8 +123,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         submitButton.textContent = "Сохранить";
                         return;
                     }
+
+                    const extension = (() => {
+                        const parts = file.name.split('.');
+                        if (parts.length > 1) {
+                          return parts.pop().toLowerCase();
+                        }
+                        alert('Не удаётся определить расширение файла. Попробуйте ещё раз');
+                        return '';
+                      })();
+
                     const base64 = await fileToBase64(file);
-                    const filename = await generateFilename(fileInput.prefix, fileInput.extenstion);
+                    const filename = await generateFilename(fileInput.prefix, extension);
                     data.fields.ufCrm168Files.push([filename, base64]);
                 }
             }
