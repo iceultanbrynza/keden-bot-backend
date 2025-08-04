@@ -56,12 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // validation. Entry cannot contain more than 255 symbols
         for (const [key, value] of formData.entries()) {
-            if (value.length > 255) {
-                alert('Ваше сообщение может содержать не более 255 символов');
+            if (value.length > 1000) {
+                alert('Ваше сообщение может содержать не более 1000 символов');
                 const input = document.querySelector(`[name="${key}"]`);
                 if (input) {
                     input.value = '';
                 }
+                loader.style.display = 'none';
                 return;
             }
             resultText += `${key}: ${value}\n`;

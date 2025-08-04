@@ -1,6 +1,14 @@
 function auto_resize(textarea){
     textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 3 + 'px' ;
+     textarea.style.overflowY = 'hidden';
+
+    if(textarea.scrollHeight > 200){
+        textarea.style.height = '200px';
+        textarea.style.overflowY = 'auto';
+    } else{
+        textarea.style.height = textarea.scrollHeight + 3 + 'px';
+        textarea.style.overflowY = 'hidden';
+    }
 };
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -9,7 +17,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     tg.ready();
     const textareas = document.querySelectorAll('textarea.auto-resize');
     const URL_BASE = window.appData?.django_url;
-    
+
     textareas.forEach(textarea => {
         auto_resize(textarea);
     });
