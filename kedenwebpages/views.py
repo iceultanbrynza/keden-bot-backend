@@ -8,7 +8,7 @@ from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
-from kedenbot.settings import URL, TELEGRAM_API, DJANGO_URL
+from kedenbot.settings import URL, TELEGRAM_API, DJANGO_URL, SYMBOLS_RESTRICTION
 
 from .redis_async import redis_client
 
@@ -104,7 +104,6 @@ async def fetchContactId(request: HttpRequest):
     if request.method == 'GET':
         chat_id = request.GET.get('UF_CRM_CHAT_ID')
         if not chat_id or chat_id=='undefined':
-            print('error')
             return JsonResponse({'error': 'UF_CRM_CHAT_ID is required'}, status=400)
 
         headers = {
@@ -172,7 +171,7 @@ async def UVEDModules(request:HttpRequest):
 
         # validation
         resultText = data.get('fields', {}).get('ufCrm168Text')
-        if len(resultText) > 2000:
+        if len(resultText) > SYMBOLS_RESTRICTION:
             return JsonResponse({"error": "Text too long or missing"}, status=400)
 
         response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)
@@ -224,7 +223,7 @@ async def UDLModules(request:HttpRequest):
 
         # validation
         resultText = data.get('fields', {}).get('ufCrm168Text')
-        if len(resultText) > 2000:
+        if len(resultText) > SYMBOLS_RESTRICTION:
             return JsonResponse({"error": "Text too long or missing"}, status=400)
 
         response = await sendPostToCRM(f'{URL}/crm.item.add', request=request, data=data)

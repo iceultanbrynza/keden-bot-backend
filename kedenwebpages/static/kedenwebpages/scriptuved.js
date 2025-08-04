@@ -12,7 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.addEventListener('input', () => {
             textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
+            textarea.style.overflowY = 'hidden';
+            const newHeight = textarea.scrollHeight;
+
+            if(newHeight > 200){
+                textarea.style.height = '200px';
+                textarea.style.overflowY = 'auto';
+            } else{
+                textarea.style.height = newHeight;
+                textarea.style.overflowY = 'hidden';
+            }
         });
     });
 

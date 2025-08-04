@@ -127,6 +127,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
+# 1000 per field assuming there 8 fields in average
+SYMBOLS_RESTRICTION = 8000
 
 URL = os.getenv("BITRIX_API")
 TELEGRAM_API = os.getenv("TELEGRAM_API")
