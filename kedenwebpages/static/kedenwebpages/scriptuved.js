@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     textareas.forEach(textarea => {
         textarea.style.height = textarea.scrollHeight + 'px';
 
-        document.addEventListener('input', () => {
+        textarea.addEventListener('input', () => {
             textarea.style.height = 'auto';
             textarea.style.overflowY = 'hidden';
             const newHeight = textarea.scrollHeight;
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 textarea.style.height = '200px';
                 textarea.style.overflowY = 'auto';
             } else{
-                textarea.style.height = newHeight;
+                textarea.style.height = newHeight + 'px';
                 textarea.style.overflowY = 'hidden';
             }
         });
