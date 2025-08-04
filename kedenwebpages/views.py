@@ -245,8 +245,10 @@ async def return_filled_application_form(request:HttpRequest, id:int=None):
         json_data = response.json()
         result = json_data.get('result', {})
         items = result.get('items', [])
+        
         if not items:
-            return
+            return render(request, 'kedenwebpages/error.html', context={'status': 500,
+                                                                        'feedback': f'Заявление#{id} не существует/удалено.'})
         item = items[0]
         # в поле ufCrm168Text хранится ответ тех.поддержки, который нужно разпарсить
         text = item['ufCrm168Text']
